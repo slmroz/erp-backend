@@ -1,0 +1,53 @@
+﻿using ERP.Infrastructure.Auth;
+using ERP.Infrastructure.Config;
+using ERP.Infrastructure.Exceptions;
+using ERP.Infrastructure.Logging;
+using ERP.Infrastructure.Security;
+using ERP.Infrastructure.Time;
+using ERP.Model.Abstractions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace ERP.Infrastructure;
+
+public static class Extensions
+{
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddControllers();
+        services.Configure<AppOptions>(configuration.GetRequiredSection(ConfigSection.app.ToString()));
+        services.AddSingleton<ExceptionMiddleware>();
+        services.AddHttpContextAccessor();
+        services.AddHttpClient();
+        services.AddSingleton<IClock, Clock>();
+
+        services.AddCustomLogging();
+        services.AddSecurity();
+        services.AddEndpointsApiExplorer();
+
+        var infrastructureAssembly = typeof(AppOptions).Assembly;
+
+        services.AddAuth(configuration);
+
+        return services;
+    }
+
+    public static WebApplication UseInfrastructure(this WebApplication app)
+    {
+        app.UseMiddleware<ExceptionMiddleware>();
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        return app;
+    }
+
+    public static T GetOptions<T>(this IConfiguration configuration, string sectionName) where T : class, new()
+    {
+        var options = new T();
+        var section = configuration.GetRequiredSection(sectionName);
+        section.Bind(options);
+
+        return options;
+    }
+}
