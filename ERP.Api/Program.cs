@@ -2,7 +2,7 @@ using ERP.Infrastructure;
 using ERP.Services.User;
 using ERP.Model;
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -41,6 +41,7 @@ app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseCors(MyAllowSpecificOrigins);
 
 app.MapControllers();
 
