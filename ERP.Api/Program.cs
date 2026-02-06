@@ -2,10 +2,15 @@ using ERP.Infrastructure;
 using ERP.Services.User;
 using ERP.Model;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddCors(o => o.AddPolicy(MyAllowSpecificOrigins, policy => {
+policy.WithOrigins("http://localhost:4200", "http://teammate.pl",
+                    "https://teammate.pl")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
 builder.Services.AddModel(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
