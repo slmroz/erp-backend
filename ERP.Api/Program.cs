@@ -11,6 +11,8 @@ policy.WithOrigins("http://localhost:4200", "http://teammate.pl",
                     "https://teammate.pl")
                     .AllowAnyMethod()
                     .AllowAnyHeader();
+}));
+
 builder.Services.AddModel(builder.Configuration);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
