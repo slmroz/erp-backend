@@ -38,9 +38,11 @@ public sealed class GetCustomersHandler : IQueryHandler<GetCustomersQuery, Paged
                 Id = c.Id,
                 Name = c.Name,
                 TaxId = c.TaxId,
+                Address = c.Address,
                 City = c.City,
                 Country = c.Country,
                 Www = c.Www,
+                ZipCode = c.ZipCode,
                 Facebook = c.Facebook
             })
             .ToListAsync();

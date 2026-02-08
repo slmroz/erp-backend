@@ -1,4 +1,8 @@
 ﻿using ERP.Services.Abstractions;
+using ERP.Services.Abstractions.Validation;
+using ERP.Services.Customer.Validators;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -19,6 +23,13 @@ public static class Extensions
             .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
             .AsImplementedInterfaces()
             .WithScopedLifetime());
+
+        services.AddTransient(
+            typeof(IPipelineBehavior<,>),
+            typeof(ValidationBehavior<,>)
+        );
+
+        services.AddValidatorsFromAssemblyContaining<AddCustomerCommandValidator>();
 
         return services;
     }

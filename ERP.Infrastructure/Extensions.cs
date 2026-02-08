@@ -5,7 +5,10 @@ using ERP.Infrastructure.Logging;
 using ERP.Infrastructure.Security;
 using ERP.Infrastructure.Time;
 using ERP.Model.Abstractions;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -38,6 +41,28 @@ public static class Extensions
         app.UseMiddleware<ExceptionMiddleware>();
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseExceptionHandler(errorApp =>
+        {
+            errorApp.Run(async context =>
+            {
+                var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+                if (exception is ValidationException validation)
+                {
+                    context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+                    await context.Response.WriteAsJsonAsync(new
+                    {
+                        errors = validation.Errors.Select(e => new
+                        {
+                            e.PropertyName,
+                            e.ErrorMessage
+                        })
+                    });
+                }
+            });
+        });
 
         return app;
     }
