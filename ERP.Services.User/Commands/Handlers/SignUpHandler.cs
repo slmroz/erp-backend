@@ -5,7 +5,7 @@ using ERP.Services.Abstractions.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.User.Commands.Handlers;
-internal sealed class SignUpHandler : ICommandHandler<SignUp>
+internal sealed class SignUpHandler : ICommandHandler<SignUpCommand>
 {
     private readonly IPasswordManager _passwordManager;
     private readonly IClock _clock;
@@ -18,7 +18,7 @@ internal sealed class SignUpHandler : ICommandHandler<SignUp>
         _dbContext = dbContext;
     }
 
-    public async Task HandleAsync(SignUp command)
+    public async Task HandleAsync(SignUpCommand command)
     {
         var email = command.Email;
         var password = command.Password;

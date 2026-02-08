@@ -4,7 +4,7 @@ using ERP.Services.Abstractions.Security;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.User.Commands.Handlers;
-internal sealed class SignInHandler : ICommandHandler<SignIn>
+internal sealed class SignInHandler : ICommandHandler<SignInCommand>
 {
     private readonly IAuthenticator _authenticator;
     private readonly IPasswordManager _passwordManager;
@@ -20,7 +20,7 @@ internal sealed class SignInHandler : ICommandHandler<SignIn>
         _dbContext = dbContext;
     }
 
-    public async Task HandleAsync(SignIn command)
+    public async Task HandleAsync(SignInCommand command)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == command.Email).ConfigureAwait(false);
         if (user is null)

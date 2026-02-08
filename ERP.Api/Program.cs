@@ -1,5 +1,6 @@
 using ERP.Infrastructure;
 using ERP.Services.User;
+using ERP.Services.Customer;
 using ERP.Model;
 
 var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
@@ -18,6 +19,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddUserApplication();
+builder.Services.AddCustomerApplication();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 

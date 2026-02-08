@@ -13,16 +13,16 @@ namespace ERP.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IQueryHandler<GetUsers, IEnumerable<UserDto>> _getUsersHandler;
-    private readonly IQueryHandler<GetUser, UserDto> _getUserHandler;
-    private readonly ICommandHandler<SignUp> _signUpHandler;
-    private readonly ICommandHandler<SignIn> _signInHandler;
+    private readonly IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> _getUsersHandler;
+    private readonly IQueryHandler<GetUserQuery, UserDto> _getUserHandler;
+    private readonly ICommandHandler<SignUpCommand> _signUpHandler;
+    private readonly ICommandHandler<SignInCommand> _signInHandler;
     private readonly ITokenStorage _tokenStorage;
 
-    public UserController(ICommandHandler<SignUp> signUpHandler,
-        ICommandHandler<SignIn> signInHandler,
-        IQueryHandler<GetUsers, IEnumerable<UserDto>> getUsersHandler,
-        IQueryHandler<GetUser, UserDto> getUserHandler,
+    public UserController(ICommandHandler<SignUpCommand> signUpHandler,
+        ICommandHandler<SignInCommand> signInHandler,
+        IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> getUsersHandler,
+        IQueryHandler<GetUserQuery, UserDto> getUserHandler,
         ITokenStorage tokenStorage)
     {
         _signUpHandler = signUpHandler;
@@ -39,7 +39,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<UserDto>> Get(int userId)
     {
-        var user = await _getUserHandler.HandleAsync(new GetUser { UserId = userId });
+        var user = await _getUserHandler.HandleAsync(new GetUserQuery { UserId = userId });
         if (user is null)
         {
             return NotFound();
@@ -61,7 +61,7 @@ public class UserController : ControllerBase
             return NotFound();
         }
 
-        var user = await _getUserHandler.HandleAsync(new GetUser { UserId = userId }).ConfigureAwait(false);
+        var user = await _getUserHandler.HandleAsync(new GetUserQuery { UserId = userId }).ConfigureAwait(false);
 
         return user;
     }
@@ -73,14 +73,14 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     //[Authorize(Policy = "is-admin")]
     //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> Get([FromQuery] GetUsers query)
+    public async Task<ActionResult<IEnumerable<UserDto>>> Get([FromQuery] GetUsersQuery query)
         => Ok(await _getUsersHandler.HandleAsync(query));
 
     [HttpPost]
     [SwaggerOperation("Create the user account")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> Post(SignUp command)
+    public async Task<ActionResult> Post(SignUpCommand command)
     {
         await _signUpHandler.HandleAsync(command);
         return CreatedAtAction(nameof(Get), new { command.Email }, null);
@@ -90,7 +90,7 @@ public class UserController : ControllerBase
     [SwaggerOperation("Sign in the user and return the JSON Web Token")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<JwtDto>> Post(SignIn command)
+    public async Task<ActionResult<JwtDto>> Post(SignInCommand command)
     {
         await _signInHandler.HandleAsync(command);
         var jwt = _tokenStorage.Get();
