@@ -23,6 +23,8 @@ public sealed class GetCustomerHandler : IQueryHandler<GetCustomerQuery, Custome
                 Id = c.Id,
                 Name = c.Name,
                 TaxId = c.TaxId,
+                Address = c.Address,
+                ZipCode = c.ZipCode,
                 City = c.City,
                 Country = c.Country,
                 Www = c.Www,
