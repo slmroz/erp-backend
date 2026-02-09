@@ -9,6 +9,7 @@ public class UpdateCustomerTests
     public async Task UpdateCustomer_ShouldModifyFields()
     {
         using var context = TestDbContextFactory.Create();
+        var clock = new ERP.Infrastructure.Time.Clock();
 
         var customer = new Model.Model.Customer
         {
@@ -19,7 +20,7 @@ public class UpdateCustomerTests
         context.Customers.Add(customer);
         await context.SaveChangesAsync();
 
-        var handler = new UpdateCustomerHandler(context);
+        var handler = new UpdateCustomerHandler(context, clock);
 
         var command = new UpdateCustomerCommand(customer.Id, "New", null, null, null, null, null, null, null);
 

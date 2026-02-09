@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Model.Model;
 
@@ -51,7 +49,9 @@ public partial class ErpContext : DbContext
             entity.ToTable("User", "Auth");
 
             entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.LastModifiedAt).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(200);
+            entity.Property(e => e.RemovedAt).HasColumnType("datetime");
             entity.Property(e => e.Role).HasDefaultValue(1);
         });
 

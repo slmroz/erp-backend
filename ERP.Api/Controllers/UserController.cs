@@ -17,16 +17,19 @@ public class UserController : ControllerBase
     private readonly IQueryHandler<GetUserQuery, UserDto> _getUserHandler;
     private readonly ICommandHandler<SignUpCommand> _signUpHandler;
     private readonly ICommandHandler<SignInCommand> _signInHandler;
+    private readonly ICommandHandler<UpdateUserCommand> _updateUserHandler;
     private readonly ITokenStorage _tokenStorage;
 
     public UserController(ICommandHandler<SignUpCommand> signUpHandler,
         ICommandHandler<SignInCommand> signInHandler,
+        ICommandHandler<UpdateUserCommand> updateUserHandler,
         IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> getUsersHandler,
         IQueryHandler<GetUserQuery, UserDto> getUserHandler,
         ITokenStorage tokenStorage)
     {
         _signUpHandler = signUpHandler;
         _signInHandler = signInHandler;
+        _updateUserHandler = updateUserHandler;
         _getUsersHandler = getUsersHandler;
         _getUserHandler = getUserHandler;
         _tokenStorage = tokenStorage;
@@ -84,6 +87,19 @@ public class UserController : ControllerBase
     {
         await _signUpHandler.HandleAsync(command);
         return CreatedAtAction(nameof(Get), new { command.Email }, null);
+    }
+
+    [HttpPut("{id:int}")]
+    [SwaggerOperation("Update the user account")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> Put(int id, UpdateUserCommand command)
+    {
+        if (id != command.Id)
+            return BadRequest();
+
+        await _updateUserHandler.HandleAsync(command);
+        return NoContent();
     }
 
     [HttpPost("sign-in")]

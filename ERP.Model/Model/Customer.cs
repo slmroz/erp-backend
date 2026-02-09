@@ -1,4 +1,7 @@
-﻿namespace ERP.Model.Model;
+﻿using System;
+using System.Collections.Generic;
+
+namespace ERP.Model.Model;
 
 public partial class Customer
 {

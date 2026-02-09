@@ -14,4 +14,8 @@ public partial class User
     public int Role { get; set; }
 
     public DateTime CreatedAt { get; set; }
+
+    public DateTime? RemovedAt { get; set; }
+
+    public DateTime? LastModifiedAt { get; set; }
 }

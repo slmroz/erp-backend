@@ -1,14 +1,17 @@
-﻿using ERP.Model.Model;
+﻿using ERP.Model.Abstractions;
+using ERP.Model.Model;
 using ERP.Services.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.Customer.Commands.Handlers;
 public sealed class UpdateCustomerHandler : ICommandHandler<UpdateCustomerCommand>
 {
+    private readonly IClock _clock;
     private readonly ErpContext _db;
 
-    public UpdateCustomerHandler(ErpContext db)
+    public UpdateCustomerHandler(ErpContext db, IClock clock)
     {
+        _clock = clock;
         _db = db;
     }
 
@@ -29,7 +32,7 @@ public sealed class UpdateCustomerHandler : ICommandHandler<UpdateCustomerComman
         customer.Country = command.Country;
         customer.Www = command.Www;
         customer.Facebook = command.Facebook;
-        customer.LastModifiedAt = DateTime.UtcNow;
+        customer.LastModifiedAt = _clock.Current();
 
         await _db.SaveChangesAsync();
     }
