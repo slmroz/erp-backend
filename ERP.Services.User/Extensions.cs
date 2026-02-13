@@ -1,4 +1,5 @@
 ﻿using ERP.Services.Abstractions;
+using ERP.Services.Common;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -18,7 +19,7 @@ public static class Extensions
         services.Scan(s => s.FromAssemblies(applicationAssembly)
             .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
             .AsImplementedInterfaces()
-            .WithScopedLifetime());
+        .WithScopedLifetime());
 
         return services;
     }

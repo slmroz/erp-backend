@@ -7,12 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Scrutor.AspNetCore" Version="3.3.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\ERP.Services.Abstractions\ERP.Services.Abstractions.csproj" />
-    <ProjectReference Include="..\ERP.Services.Common\ERP.Services.Common.csproj" />
   </ItemGroup>
 
 </Project>

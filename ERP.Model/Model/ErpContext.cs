@@ -51,6 +51,8 @@ public partial class ErpContext : DbContext
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.LastModifiedAt).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(200);
+            entity.Property(e => e.PasswordResetExpires).HasColumnType("datetime");
+            entity.Property(e => e.PasswordResetToken).HasMaxLength(200);
             entity.Property(e => e.RemovedAt).HasColumnType("datetime");
             entity.Property(e => e.Role).HasDefaultValue(1);
         });

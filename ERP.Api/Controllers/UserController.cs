@@ -1,5 +1,6 @@
 using ERP.Services.Abstractions;
 using ERP.Services.Abstractions.Security;
+using ERP.Services.Common;
 using ERP.Services.User.Commands;
 using ERP.Services.User.DTO;
 using ERP.Services.User.Queries;
@@ -18,21 +19,35 @@ public class UserController : ControllerBase
     private readonly ICommandHandler<SignUpCommand> _signUpHandler;
     private readonly ICommandHandler<SignInCommand> _signInHandler;
     private readonly ICommandHandler<UpdateUserCommand> _updateUserHandler;
+    private readonly ICommandHandler<ChangePasswordCommand> _changePasswordHandler;
+    private readonly ICommandHandler<ForgotPasswordCommand> _forgotPasswordHandler;
+    private readonly ICommandHandler<ResetPasswordCommand> _resetPasswordHandler;
     private readonly ITokenStorage _tokenStorage;
+
+    private readonly IConfiguration _configuration;
 
     public UserController(ICommandHandler<SignUpCommand> signUpHandler,
         ICommandHandler<SignInCommand> signInHandler,
         ICommandHandler<UpdateUserCommand> updateUserHandler,
+        ICommandHandler<ChangePasswordCommand> changePasswordHandler,
+        ICommandHandler<ForgotPasswordCommand> forgotPasswordHandler,
+        ICommandHandler<ResetPasswordCommand> resetPasswordHandler,
         IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> getUsersHandler,
         IQueryHandler<GetUserQuery, UserDto> getUserHandler,
-        ITokenStorage tokenStorage)
+        ITokenStorage tokenStorage,
+        IConfiguration configuration)
     {
         _signUpHandler = signUpHandler;
         _signInHandler = signInHandler;
         _updateUserHandler = updateUserHandler;
+        _changePasswordHandler = changePasswordHandler;
+        _forgotPasswordHandler = forgotPasswordHandler;
+        _resetPasswordHandler = resetPasswordHandler;
         _getUsersHandler = getUsersHandler;
         _getUserHandler = getUserHandler;
         _tokenStorage = tokenStorage;
+
+        _configuration = configuration;
     }
 
     //[Authorize(Policy = "is-admin")]
@@ -112,5 +127,47 @@ public class UserController : ControllerBase
         var jwt = _tokenStorage.Get();
         //_logger.LogInformation("Token {token} assigned in successfully.", jwt);
         return jwt;
+    }
+
+    // Controller method
+    [HttpPut("change-password")]
+    [SwaggerOperation("Change the user password")]
+    [Authorize]  // Assuming JWT or similar auth to identify user
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ChangePassword(ChangePasswordCommand command)
+    {
+        await _changePasswordHandler.HandleAsync(command);
+        return NoContent();
+    }
+
+    [HttpPost("forgot-password")]
+    [SwaggerOperation("Request password reset via email")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> ForgotPassword(ForgotPasswordCommand command)
+    {
+        await _forgotPasswordHandler.HandleAsync(command);
+        return Ok();  // Don't reveal if email exists for security
+    }
+
+    [HttpPost("reset-password")]
+    [SwaggerOperation("Reset password using token")]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> ResetPassword(ResetPasswordCommand command)
+    {
+        await _resetPasswordHandler.HandleAsync(command);
+        return NoContent();
+    }
+
+    [HttpGet("test-email-config")]
+    public IActionResult TestConfig([FromServices] IEmailService email)
+    {
+        var password = _configuration["EmailSettings:Password"];
+        return Ok($"Email password configured: {password != null}");
     }
 }

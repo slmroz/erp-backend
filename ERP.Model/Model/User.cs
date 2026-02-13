@@ -18,4 +18,8 @@ public partial class User
     public DateTime? RemovedAt { get; set; }
 
     public DateTime? LastModifiedAt { get; set; }
+
+    public string? PasswordResetToken { get; set; }
+
+    public DateTime? PasswordResetExpires { get; set; }
 }

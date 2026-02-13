@@ -1,10 +1,12 @@
 ﻿using ERP.Infrastructure.Auth;
+using ERP.Infrastructure.CommonServices;
 using ERP.Infrastructure.Config;
 using ERP.Infrastructure.Exceptions;
 using ERP.Infrastructure.Logging;
 using ERP.Infrastructure.Security;
 using ERP.Infrastructure.Time;
 using ERP.Model.Abstractions;
+using ERP.Services.Common;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -31,6 +33,8 @@ public static class Extensions
         services.AddCustomLogging();
         services.AddSecurity();
         services.AddEndpointsApiExplorer();
+
+        services.AddScoped<IEmailService, EmailService>();
 
         var infrastructureAssembly = typeof(AppOptions).Assembly;
 
