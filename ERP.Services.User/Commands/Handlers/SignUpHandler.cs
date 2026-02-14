@@ -1,6 +1,6 @@
 ﻿using ERP.Model.Abstractions;
 using ERP.Model.Model;
-using ERP.Services.Abstractions;
+using ERP.Services.Abstractions.CQRS;
 using ERP.Services.Abstractions.Security;
 using Microsoft.EntityFrameworkCore;
 

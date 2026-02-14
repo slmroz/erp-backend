@@ -1,4 +1,4 @@
-﻿using ERP.Services.Abstractions;
+﻿using ERP.Services.Abstractions.CQRS;
 using Humanizer;
 using Microsoft.Extensions.Logging;
 using System;

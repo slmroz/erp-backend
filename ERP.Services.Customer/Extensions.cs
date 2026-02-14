@@ -1,4 +1,4 @@
-﻿using ERP.Services.Abstractions;
+﻿using ERP.Services.Abstractions.CQRS;
 using ERP.Services.Abstractions.Validation;
 using ERP.Services.Customer.Validators;
 using FluentValidation;

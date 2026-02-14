@@ -1,5 +1,5 @@
 ﻿using ERP.Model.Model;
-using ERP.Services.Abstractions;
+using ERP.Services.Abstractions.CQRS;
 
 namespace ERP.Services.Customer.Commands.Handlers;
 public sealed class AddCustomerHandler : ICommandHandler<AddCustomerCommand>

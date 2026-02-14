@@ -1,5 +1,5 @@
 ﻿using ERP.Model.Model;
-using ERP.Services.Abstractions;
+using ERP.Services.Abstractions.CQRS;
 using ERP.Services.User.DTO;
 using Microsoft.EntityFrameworkCore;
 

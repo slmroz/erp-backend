@@ -1,4 +1,4 @@
-﻿using ERP.Services.Abstractions;
+﻿using ERP.Services.Abstractions.CQRS;
 
 namespace ERP.Services.Customer.Commands;
 public sealed class AddCustomerCommand : ICommand

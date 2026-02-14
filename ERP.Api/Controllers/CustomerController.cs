@@ -1,4 +1,4 @@
-﻿using ERP.Services.Abstractions;
+﻿using ERP.Services.Abstractions.CQRS;
 using ERP.Services.Abstractions.Search;
 using ERP.Services.Customer.Commands;
 using ERP.Services.Customer.DTO;

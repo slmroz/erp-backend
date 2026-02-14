@@ -1,5 +1,5 @@
 ﻿using ERP.Model.Model;
-using ERP.Services.Abstractions;
+using ERP.Services.Abstractions.CQRS;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.Customer.Commands.Handlers;

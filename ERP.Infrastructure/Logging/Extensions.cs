@@ -1,5 +1,5 @@
 ﻿using ERP.Infrastructure.Logging.Decorators;
-using ERP.Services.Abstractions;
+using ERP.Services.Abstractions.CQRS;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ERP.Infrastructure.Logging;

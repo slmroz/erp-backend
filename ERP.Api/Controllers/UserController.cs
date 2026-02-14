@@ -1,4 +1,6 @@
-using ERP.Services.Abstractions;
+using ERP.Model.Model;
+using ERP.Services.Abstractions.CommonServices;
+using ERP.Services.Abstractions.CQRS;
 using ERP.Services.Abstractions.Security;
 using ERP.Services.Common;
 using ERP.Services.User.Commands;
@@ -25,6 +27,7 @@ public class UserController : ControllerBase
     private readonly ITokenStorage _tokenStorage;
 
     private readonly IConfiguration _configuration;
+    private readonly IEmailService _emailService;
 
     public UserController(ICommandHandler<SignUpCommand> signUpHandler,
         ICommandHandler<SignInCommand> signInHandler,
@@ -35,7 +38,8 @@ public class UserController : ControllerBase
         IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> getUsersHandler,
         IQueryHandler<GetUserQuery, UserDto> getUserHandler,
         ITokenStorage tokenStorage,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        IEmailService emailService)
     {
         _signUpHandler = signUpHandler;
         _signInHandler = signInHandler;
@@ -48,6 +52,7 @@ public class UserController : ControllerBase
         _tokenStorage = tokenStorage;
 
         _configuration = configuration;
+        _emailService = emailService;
     }
 
     //[Authorize(Policy = "is-admin")]
@@ -165,9 +170,10 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("test-email-config")]
-    public IActionResult TestConfig([FromServices] IEmailService email)
+    public async Task<IActionResult> TestConfig([FromServices] IEmailService email)
     {
         var password = _configuration["EmailSettings:Password"];
+        await _emailService.SendAsync("slmroz@wp.pl", "PasswordReset", new { UserName = "Slawek", ResetUrl = "https://teammate.pl" });
         return Ok($"Email password configured: {password != null}");
     }
 }
