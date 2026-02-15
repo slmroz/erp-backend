@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Model.Model;
 
@@ -13,6 +15,8 @@ public partial class ErpContext : DbContext
     {
     }
 
+    public virtual DbSet<Contact> Contacts { get; set; }
+
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -20,6 +24,22 @@ public partial class ErpContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("slmroz_dbadmin");
+
+        modelBuilder.Entity<Contact>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Contact__3214EC074553CEC5");
+
+            entity.ToTable("Contact", "Crm");
+
+            entity.Property(e => e.Email).HasMaxLength(100);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.PhoneNo).HasMaxLength(50);
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.Contacts)
+                .HasForeignKey(d => d.CustomerId)
+                .HasConstraintName("FK__Contact__Custome__182C9B23");
+        });
 
         modelBuilder.Entity<Customer>(entity =>
         {

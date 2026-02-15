@@ -34,7 +34,9 @@ internal sealed class SignUpHandler : ICommandHandler<SignUpCommand>
             CreatedAt = _clock.Current(),
             Email = email,
             Password = password,
-            Role = (int)Model.Enum.Role.User
+            Role = command.Role ?? (int)Model.Enum.Role.User,
+            FirstName = command.FirstName,
+            LastName = command.LastName,
         };
         await _dbContext.Users.AddAsync(user).ConfigureAwait(false);
         await _dbContext.SaveChangesAsync().ConfigureAwait(false);

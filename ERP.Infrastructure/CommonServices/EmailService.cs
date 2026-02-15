@@ -1,8 +1,6 @@
 ﻿using ERP.Services.Abstractions.CommonServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SendGrid.Helpers.Mail;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 
@@ -21,7 +19,7 @@ public sealed class EmailService : IEmailService
             ?? new Dictionary<string, EmailTemplateConfig>();
     }
 
-    public async Task SendAsync(string toEmail, string templateKey, object? model = null)
+    public async Task SendAsync(string toEmail, string templateKey, Dictionary<string, string>? model = null)
     {
         if (!_templates.TryGetValue(templateKey, out var template))
         {
@@ -54,11 +52,15 @@ public sealed class EmailService : IEmailService
         await smtpClient.SendMailAsync(mailMessage);
     }
 
-    private static string RenderTemplate(string template, object? model)
+    private static string RenderTemplate(string template, Dictionary<string, string>? model)
     {
         if (model == null) return template;
-        // Simple RazorLight or Handlebars.NET rendering
-        // For demo: basic string interpolation (enhance with RazorLight nuget)
-        return template.Replace("{{UserName}}", model.GetType().GetProperty("UserName")?.GetValue(model)?.ToString() ?? "");
+
+        foreach (var item in model)
+        {
+            template = template.Replace("{{" + item.Key + "}}", item.Value);
+        }
+
+        return template;
     }
 }

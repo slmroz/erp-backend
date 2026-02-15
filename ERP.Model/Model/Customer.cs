@@ -28,4 +28,6 @@ public partial class Customer
     public DateTime? LastModifiedAt { get; set; }
 
     public DateTime? RemovedAt { get; set; }
+
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
 }

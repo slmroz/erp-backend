@@ -2,5 +2,5 @@
 
 public interface IEmailService
 {
-    Task SendAsync(string toEmail, string templateKey, object? model = null);
+    Task SendAsync(string toEmail, string templateKey, Dictionary<string, string>? model = null);
 }
