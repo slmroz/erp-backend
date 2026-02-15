@@ -22,4 +22,8 @@ public partial class User
     public string? PasswordResetToken { get; set; }
 
     public DateTime? PasswordResetExpires { get; set; }
+
+    public string? FirstName { get; set; }
+
+    public string? LastName { get; set; }
 }

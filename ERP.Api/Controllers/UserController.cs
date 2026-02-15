@@ -1,8 +1,6 @@
-using ERP.Model.Model;
 using ERP.Services.Abstractions.CommonServices;
 using ERP.Services.Abstractions.CQRS;
 using ERP.Services.Abstractions.Security;
-using ERP.Services.Common;
 using ERP.Services.User.Commands;
 using ERP.Services.User.DTO;
 using ERP.Services.User.Queries;
@@ -169,11 +167,19 @@ public class UserController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("test-email-config")]
-    public async Task<IActionResult> TestConfig([FromServices] IEmailService email)
-    {
-        var password = _configuration["EmailSettings:Password"];
-        await _emailService.SendAsync("slmroz@wp.pl", "PasswordReset", new { UserName = "Slawek", ResetUrl = "https://teammate.pl" });
-        return Ok($"Email password configured: {password != null}");
-    }
+    //[HttpGet("test-email-config")]
+    //public async Task<IActionResult> TestConfig([FromServices] IEmailService email)
+    //{
+    //    var password = _configuration["EmailSettings:Password"];
+    //    var exception = "All fine";
+    //    try
+    //    {
+    //        await _emailService.SendAsync("slmroz@wp.pl", "PasswordReset", new { UserName = "Slawek", ResetUrl = "https://teammate.pl" });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        exception = ex.Message;
+    //    }
+    //    return Ok($"Email password configured: {password}. Exception: {exception}");
+    //}
 }

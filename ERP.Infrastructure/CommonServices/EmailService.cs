@@ -1,7 +1,8 @@
 ﻿using ERP.Services.Abstractions.CommonServices;
-using ERP.Services.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SendGrid.Helpers.Mail;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 
@@ -31,6 +32,9 @@ public sealed class EmailService : IEmailService
         var body = RenderTemplate(template.Body, model);
 
         var smtpSettings = _configuration.GetSection("EmailSettings");
+        var fromEmail = smtpSettings["FromEmail"];
+
+
         var smtpClient = new SmtpClient(smtpSettings["SmtpServer"])
         {
             Port = int.Parse(smtpSettings["SmtpPort"] ?? "587"),
@@ -38,9 +42,10 @@ public sealed class EmailService : IEmailService
                     smtpSettings["Username"],
                     smtpSettings["Password"]
                 ),
-            EnableSsl = bool.Parse(smtpSettings["EnableSsl"] ?? "true")
+            EnableSsl = false //bool.Parse(smtpSettings["EnableSsl"] ?? "true")
         };
         var mailMessage = new MailMessage();
+        mailMessage.From = new MailAddress(fromEmail);
         mailMessage.Subject = subject;
         mailMessage.Body = body;
         mailMessage.To.Add(toEmail);
