@@ -4,7 +4,7 @@ using ERP.Services.Abstractions.CQRS;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.Customer.Commands.Handlers;
-internal sealed class RemoveContactHandler : ICommandHandler<RemoveContactCommand>
+public sealed class RemoveContactHandler : ICommandHandler<RemoveContactCommand>
 {
     private readonly IClock _clock;
     private readonly ErpContext _db;

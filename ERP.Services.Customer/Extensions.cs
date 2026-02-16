@@ -5,7 +5,10 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
+
+[assembly: InternalsVisibleTo("ERP.Tests")]
 namespace ERP.Services.Customer;
 
 public static class Extensions

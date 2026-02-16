@@ -1,0 +1,14 @@
+update modelu (package manager console):
+Scaffold-DbContext "Server=mssql3.webio.pl,2401;User ID=slmroz_dbadmin;Password=SlaweK75!;Database=slmroz_erpbase;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Model -Force -Context ErpContext
+
+UI:
+npx ng build
+
+
+todo:
+- kontakty UI
+- brakujące unit tests
+- product list
+
+
+

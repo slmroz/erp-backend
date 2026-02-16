@@ -11,12 +11,12 @@ internal sealed class GetUserHandler : IQueryHandler<GetUserQuery, UserDto>
     public GetUserHandler(ErpContext dbContext)
         => _dbContext = dbContext;
 
-    public async Task<UserDto> HandleAsync(GetUserQuery query)
+    public async Task<UserDto?> HandleAsync(GetUserQuery query)
     {
         var user = await _dbContext.Users
             .AsNoTracking()
             .SingleOrDefaultAsync(x => x.Id == query.UserId);
 
-        return new UserDto(user);
+        return (user != null) ? new UserDto(user) : null;
     }
 }

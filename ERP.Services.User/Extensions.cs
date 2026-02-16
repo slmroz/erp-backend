@@ -1,9 +1,10 @@
 ﻿using ERP.Services.Abstractions.CQRS;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("ERP.Tests")]
 namespace ERP.Services.User;
-
 public static class Extensions
 {
     public static IServiceCollection AddUserApplication(this IServiceCollection services)

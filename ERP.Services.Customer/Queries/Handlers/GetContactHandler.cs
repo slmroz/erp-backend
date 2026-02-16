@@ -5,7 +5,7 @@ using ERP.Services.Customer.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.Customer.Queries.Handlers;
-internal sealed class GetContactHandler : IQueryHandler<GetContactQuery, ContactDto>
+public sealed class GetContactHandler : IQueryHandler<GetContactQuery, ContactDto>
 {
     private readonly ErpContext _db;
 

@@ -33,7 +33,7 @@ internal sealed class SignUpHandler : ICommandHandler<SignUpCommand>
         {
             CreatedAt = _clock.Current(),
             Email = email,
-            Password = password,
+            Password = securedPassword,
             Role = command.Role ?? (int)Model.Enum.Role.User,
             FirstName = command.FirstName,
             LastName = command.LastName,
