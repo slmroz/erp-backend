@@ -17,10 +17,11 @@ public partial class Contact
 
     public string? Email { get; set; }
 
-    public virtual Customer? Customer { get; set; }
-
-
     public DateTime? CreatedAt { get; set; }
+
     public DateTime? LastModifiedAt { get; set; }
+
     public DateTime? RemovedAt { get; set; }
+
+    public virtual Customer? Customer { get; set; }
 }

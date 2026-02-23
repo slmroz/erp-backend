@@ -20,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddUserApplication();
 builder.Services.AddCustomerApplication();
+builder.Services.AddProductApplication();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
