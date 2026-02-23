@@ -9,7 +9,7 @@ using ERP.Services.Abstractions.Search;
 namespace ERP.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class ProductGroupsController : ControllerBase
 {
     private readonly IQueryHandler<GetProductGroupQuery, ProductGroupDto> _getProductGroupHandler;
