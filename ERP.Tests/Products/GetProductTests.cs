@@ -19,7 +19,8 @@ public class GetProductTests
             PartNumber = "BRK001",
             Name = "Brake Disc Toyota",
             ListPrice = 245.99m,
-            WeightKg = 8.5m
+            WeightKg = 8.5m,
+            CreatedAt = DateTime.UtcNow
         };
         context.Products.Add(product);
         await context.SaveChangesAsync();
@@ -54,7 +55,9 @@ public class GetProductTests
             Id = 1,
             ProductGroupId = 1,
             PartNumber = "BRK001",
-            RemovedAt = DateTime.UtcNow
+            RemovedAt = DateTime.UtcNow,
+            CreatedAt = DateTime.UtcNow,
+            Name = "Brake1"
         });
         await context.SaveChangesAsync();
 

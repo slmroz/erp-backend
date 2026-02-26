@@ -30,7 +30,7 @@ public class RemoveProductGroupTests
         var clock = new ERP.Infrastructure.Time.Clock();
 
         context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brakes" });
-        context.Products.Add(new Product { ProductGroupId = 1, PartNumber = "BRK001" });
+        context.Products.Add(new Product { ProductGroupId = 1, PartNumber = "BRK001", Name = "Brake" });
         await context.SaveChangesAsync();
 
         var handler = new RemoveProductGroupHandler(context, clock);

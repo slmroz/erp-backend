@@ -10,7 +10,7 @@ internal sealed class ForgotPasswordHandler : ICommandHandler<ForgotPasswordComm
 {
     private readonly ErpContext _dbContext;
     private readonly IPasswordManager _passwordManager;
-    private readonly IEmailService _emailService;  // Inject your email sender
+    private readonly IEmailService _emailService; 
     private readonly IClock _clock;
 
     public ForgotPasswordHandler(ErpContext dbContext, IPasswordManager passwordManager,

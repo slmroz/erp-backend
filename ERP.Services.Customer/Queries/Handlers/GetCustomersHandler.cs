@@ -23,8 +23,8 @@ public sealed class GetCustomersHandler : IQueryHandler<GetCustomersQuery, Paged
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             baseQuery = baseQuery.Where(c =>
-                c.Name!.Contains(query.Search) ||
-                c.TaxId!.Contains(query.Search));
+                c.Name!.ToLower().Contains(query.Search.ToLower()) ||
+                c.TaxId!.ToLower().Contains(query.Search.ToLower()));
         }
 
         var total = await baseQuery.CountAsync();

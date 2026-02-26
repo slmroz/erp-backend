@@ -1,4 +1,5 @@
-﻿using ERP.Model.Model;
+﻿using ERP.Model.Abstractions;
+using ERP.Model.Model;
 using ERP.Services.Abstractions.CQRS;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,9 +12,14 @@ namespace ERP.Services.Products.Commands.Handlers;
 
 internal sealed class AddProductGroupHandler : ICommandHandler<AddProductGroupCommand>
 {
+    private readonly IClock _clock;
     private readonly ErpContext _dbContext;
 
-    public AddProductGroupHandler(ErpContext dbContext) => _dbContext = dbContext;
+    public AddProductGroupHandler(ErpContext dbContext, IClock clock)
+    {
+        _clock = clock;
+        _dbContext = dbContext;
+    }
 
     public async Task HandleAsync(AddProductGroupCommand command)
     {
@@ -25,7 +31,7 @@ internal sealed class AddProductGroupHandler : ICommandHandler<AddProductGroupCo
         {
             Name = command.Name,
             Description = command.Description,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = _clock.Current()
         };
 
         _dbContext.ProductGroups.Add(group);

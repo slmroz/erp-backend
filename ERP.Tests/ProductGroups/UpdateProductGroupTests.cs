@@ -40,7 +40,7 @@ public class UpdateProductGroupTests
         var clock = new ERP.Infrastructure.Time.Clock();
 
         context.ProductGroups.AddRange(
-            new ProductGroup { Id = 1, Name = "Old Brakes" },
+            new ProductGroup { Name = "Old Brakes" },
             new ProductGroup { Name = "Brake Systems" }
         );
         await context.SaveChangesAsync();

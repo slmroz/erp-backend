@@ -10,7 +10,9 @@ public class AddProductGroupTests
     public async Task AddProductGroup_ShouldCreate_WhenValid()
     {
         using var context = TestDbContextFactory.Create();
-        var handler = new AddProductGroupHandler(context);
+        var clock = new Infrastructure.Time.Clock();
+
+        var handler = new AddProductGroupHandler(context, clock);
         var command = new AddProductGroupCommand("Brake Systems", "Układy hamulcowe");
 
         await handler.HandleAsync(command);
@@ -30,7 +32,8 @@ public class AddProductGroupTests
         context.ProductGroups.Add(new ProductGroup { Name = "Brake Systems" });
         await context.SaveChangesAsync();
 
-        var handler = new AddProductGroupHandler(context);
+        var clock = new Infrastructure.Time.Clock();
+        var handler = new AddProductGroupHandler(context, clock);
         var act = () => handler.HandleAsync(new AddProductGroupCommand("Brake Systems", "Test"));
 
         await act.Should().ThrowAsync<InvalidOperationException>()

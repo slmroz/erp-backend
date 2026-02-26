@@ -19,9 +19,9 @@ internal sealed class GetProductsHandler : IQueryHandler<GetProductsQuery, Paged
 
         if (!string.IsNullOrEmpty(query.Search))
             filterQuery = filterQuery.Where(p =>
-                p.PartNumber.Contains(query.Search) ||
-                p.Name.Contains(query.Search) ||
-                p.Oembrand.Contains(query.Search));
+                p.PartNumber.ToLower().Contains(query.Search.ToLower()) ||
+                p.Name.ToLower().Contains(query.Search.ToLower()) ||
+                p.Oembrand.ToLower().Contains(query.Search.ToLower()));
 
         if (query.GroupId.HasValue)
             filterQuery = filterQuery.Where(p => p.ProductGroupId == query.GroupId);
@@ -35,9 +35,9 @@ internal sealed class GetProductsHandler : IQueryHandler<GetProductsQuery, Paged
 
         if (!string.IsNullOrEmpty(query.Search))
             dataQuery = dataQuery.Where(p =>
-                p.PartNumber.Contains(query.Search) ||
-                p.Name.Contains(query.Search) ||
-                p.Oembrand.Contains(query.Search));
+                p.PartNumber.ToLower().Contains(query.Search.ToLower()) ||
+                p.Name.ToLower().Contains(query.Search.ToLower()) ||
+                p.Oembrand.ToLower().Contains(query.Search.ToLower()));
 
         if (query.GroupId.HasValue)
             dataQuery = dataQuery.Where(p => p.ProductGroupId == query.GroupId);

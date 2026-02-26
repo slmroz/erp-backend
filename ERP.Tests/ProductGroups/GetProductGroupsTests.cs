@@ -31,8 +31,8 @@ public class GetProductGroupsTests
     {
         using var context = TestDbContextFactory.Create();
         context.ProductGroups.AddRange(
-            new ProductGroup { Name = "Brake Systems" },
-            new ProductGroup { Name = "Engine Parts" }
+            new ProductGroup { Id = 1, Name = "Brake Systems", CreatedAt = DateTime.UtcNow },
+            new ProductGroup { Id = 2, Name = "Engine Components", CreatedAt = DateTime.UtcNow }
         );
         await context.SaveChangesAsync();
 
@@ -47,8 +47,8 @@ public class GetProductGroupsTests
     public async Task GetProductGroups_ShouldIncludeProductCount()
     {
         using var context = TestDbContextFactory.Create();
-        context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brakes" });
-        context.Products.Add(new Product { ProductGroupId = 1, PartNumber = "BRK001" });
+        context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brakes", CreatedAt = DateTime.UtcNow });
+        context.Products.Add(new Product { ProductGroupId = 1, Name = "Brake", PartNumber = "BRK001", CreatedAt = DateTime.UtcNow });
         await context.SaveChangesAsync();
 
         var handler = new GetProductGroupsHandler(context);

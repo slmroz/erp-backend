@@ -17,7 +17,7 @@ public class GetProductGroupTests
             Description = "Hamulce",
             CreatedAt = DateTime.UtcNow
         });
-        context.Products.Add(new Product { ProductGroupId = 1 });
+        context.Products.Add(new Product { ProductGroupId = 1, Name = "Brake", PartNumber = "123" });
         await context.SaveChangesAsync();
 
         var handler = new GetProductGroupHandler(context);

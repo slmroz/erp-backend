@@ -14,9 +14,10 @@ public class AddProductTests
         // Arrange
         context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brake Systems", CreatedAt = DateTime.UtcNow });
         await context.SaveChangesAsync();
+        var clock = new Infrastructure.Time.Clock();
 
-        var handler = new AddProductHandler(context);
-        var command = new AddProductCommand(1, "BRK-001", "Brake Disc Toyota", "Front discs 300mm", "Toyota", 245.99m, 8.5m);
+        var handler = new AddProductHandler(context, clock);
+        var command = new AddProductCommand(1, "Brake Disc Toyota", "BRK-001", "Front discs 300mm", "Toyota", 245.99m, 8.5m);
 
         // Act
         await handler.HandleAsync(command);
@@ -34,11 +35,13 @@ public class AddProductTests
     public async Task AddProduct_ShouldThrow_WhenPartNumberExists()
     {
         using var context = TestDbContextFactory.Create();
-        context.Products.Add(new ERP.Model.Model.Product { PartNumber = "BRK-001", ProductGroupId = 1 });
+        context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brake Systems", CreatedAt = DateTime.UtcNow });
+        context.Products.Add(new ERP.Model.Model.Product { PartNumber = "BRK-001", Name = "Brake", ProductGroupId = 1 });
         await context.SaveChangesAsync();
+        var clock = new Infrastructure.Time.Clock();
 
-        var handler = new AddProductHandler(context);
-        var command = new AddProductCommand(1, "BRK-001", "Duplicate", null, null, null, null);
+        var handler = new AddProductHandler(context, clock);
+        var command = new AddProductCommand(1, "Duplicate", "BRK-001", null, null, null, null);
 
         var act = () => handler.HandleAsync(command);
         await act.Should().ThrowAsync<InvalidOperationException>()

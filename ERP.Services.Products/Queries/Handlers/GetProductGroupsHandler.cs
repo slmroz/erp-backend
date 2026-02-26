@@ -17,7 +17,7 @@ internal sealed class GetProductGroupsHandler : IQueryHandler<GetProductGroupsQu
         var filterQuery = _dbContext.ProductGroups.Where(g => g.RemovedAt == null);
 
         if (!string.IsNullOrEmpty(query.Search))
-            filterQuery = filterQuery.Where(g => g.Name.Contains(query.Search));
+            filterQuery = filterQuery.Where(g => g.Name.ToLower().Contains(query.Search.ToLower()));
 
         var total = await filterQuery.CountAsync();
 
@@ -26,7 +26,7 @@ internal sealed class GetProductGroupsHandler : IQueryHandler<GetProductGroupsQu
             .Where(g => g.RemovedAt == null);
 
         if (!string.IsNullOrEmpty(query.Search))
-            dataQuery = dataQuery.Where(g => g.Name.Contains(query.Search));
+            dataQuery = dataQuery.Where(g => g.Name.ToLower().Contains(query.Search.ToLower()));
 
         var items = await dataQuery
             .OrderBy(g => g.Name)

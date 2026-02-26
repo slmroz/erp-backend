@@ -17,6 +17,8 @@ public partial class ErpContext : DbContext
 
     public virtual DbSet<Contact> Contacts { get; set; }
 
+    public virtual DbSet<Currency> Currencies { get; set; }
+
     public virtual DbSet<Customer> Customers { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
@@ -24,7 +26,8 @@ public partial class ErpContext : DbContext
     public virtual DbSet<ProductGroup> ProductGroups { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-        
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("slmroz_dbadmin");
@@ -46,6 +49,20 @@ public partial class ErpContext : DbContext
             entity.HasOne(d => d.Customer).WithMany(p => p.Contacts)
                 .HasForeignKey(d => d.CustomerId)
                 .HasConstraintName("FK__Contact__Custome__182C9B23");
+        });
+
+        modelBuilder.Entity<Currency>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Currency__3214EC07C9AB04A0");
+
+            entity.ToTable("Currency", "Catalog");
+
+            entity.Property(e => e.BaseCurrency).HasMaxLength(5);
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Rate).HasColumnType("decimal(18, 6)");
+            entity.Property(e => e.RemovedAt).HasColumnType("datetime");
+            entity.Property(e => e.TargetCurrency).HasMaxLength(5);
         });
 
         modelBuilder.Entity<Customer>(entity =>

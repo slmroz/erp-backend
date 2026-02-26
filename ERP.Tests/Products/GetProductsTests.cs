@@ -14,9 +14,9 @@ public class GetProductsTests
         // Arrange - 3 produkty + ProductGroup
         context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brake Systems" });
         context.Products.AddRange(
-            new Model.Model.Product { Id = 1, ProductGroupId = 1, PartNumber = "BRK001", Name = "Brake Disc Toyota", ListPrice = 245m },
-            new Model.Model.Product { Id = 2, ProductGroupId = 1, PartNumber = "BRK002", Name = "Brake Pads VW", ListPrice = 89m },
-            new Model.Model.Product { Id = 3, ProductGroupId = 1, PartNumber = "BRK003", Name = "Brake Caliper BMW", ListPrice = 450m }
+            new Model.Model.Product { Id = 1, ProductGroupId = 1, PartNumber = "BRK001", Name = "Brake Disc Toyota", ListPrice = 245m, CreatedAt = DateTime.UtcNow },
+            new Model.Model.Product { Id = 2, ProductGroupId = 1, PartNumber = "BRK002", Name = "Brake Pads VW", ListPrice = 89m, CreatedAt = DateTime.UtcNow },
+            new Model.Model.Product { Id = 3, ProductGroupId = 1, PartNumber = "BRK003", Name = "Brake Caliper BMW", ListPrice = 450m, CreatedAt = DateTime.UtcNow }
         );
         await context.SaveChangesAsync();
 
@@ -39,8 +39,8 @@ public class GetProductsTests
         using var context = TestDbContextFactory.Create();
         context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brake Systems" });
         context.Products.AddRange(
-            new Model.Model.Product { ProductGroupId = 1, PartNumber = "BRK001", Name = "Brake Disc", Oembrand = "Toyota" },
-            new Model.Model.Product { ProductGroupId = 1, PartNumber = "SUS001", Name = "Shock Absorber", Oembrand = "VW" }
+            new Model.Model.Product { ProductGroupId = 1, PartNumber = "BRK001", Name = "Brake Disc", Oembrand = "Toyota", CreatedAt = DateTime.UtcNow },
+            new Model.Model.Product { ProductGroupId = 1, PartNumber = "SUS001", Name = "Shock Absorber", Oembrand = "VW", CreatedAt = DateTime.UtcNow }
         );
         await context.SaveChangesAsync();
 
@@ -60,8 +60,8 @@ public class GetProductsTests
             new ProductGroup { Id = 2, Name = "Suspension" }
         );
         context.Products.AddRange(
-            new Model.Model.Product { ProductGroupId = 1, PartNumber = "BRK001" },
-            new Model.Model.Product { ProductGroupId = 2, PartNumber = "SUS001" }
+            new Model.Model.Product { ProductGroupId = 1, PartNumber = "BRK001", Name = "Brake", CreatedAt = DateTime.UtcNow },
+            new Model.Model.Product { ProductGroupId = 2, PartNumber = "SUS001", Name = "Suspension", CreatedAt = DateTime.UtcNow }
         );
         await context.SaveChangesAsync();
 
@@ -78,8 +78,8 @@ public class GetProductsTests
         using var context = TestDbContextFactory.Create();
         context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brakes" });
         context.Products.AddRange(
-            new Model.Model.Product { ProductGroupId = 1, PartNumber = "BRK001", RemovedAt = DateTime.UtcNow },
-            new Model.Model.Product { ProductGroupId = 1, PartNumber = "BRK002" } // aktywny
+            new Model.Model.Product { ProductGroupId = 1, Name = "Brake1", PartNumber = "BRK001", RemovedAt = DateTime.UtcNow, CreatedAt = DateTime.UtcNow },
+            new Model.Model.Product { ProductGroupId = 1, Name = "Brake2", PartNumber = "BRK002", CreatedAt = DateTime.UtcNow } // aktywny
         );
         await context.SaveChangesAsync();
 

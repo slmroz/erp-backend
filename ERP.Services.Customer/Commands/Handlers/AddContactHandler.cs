@@ -32,7 +32,8 @@ public sealed class AddContactHandler : ICommandHandler<AddContactCommand>
             FirstName = command.FirstName,
             LastName = command.LastName,
             PhoneNo = command.PhoneNo,
-            Email = command.Email
+            Email = command.Email,
+            CreatedAt = _clock.Current()
         };
 
         await _db.Contacts.AddAsync(contact);

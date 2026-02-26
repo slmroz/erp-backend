@@ -1,4 +1,5 @@
-﻿using ERP.Model.Model;
+﻿using ERP.Model.Abstractions;
+using ERP.Model.Model;
 using ERP.Services.Abstractions.CQRS;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,8 +7,13 @@ namespace ERP.Services.Products.Commands.Handlers;
 
 internal sealed class AddProductHandler : ICommandHandler<AddProductCommand>
 {
+    private readonly IClock _clock;
     private readonly ErpContext _dbContext;
-    public AddProductHandler(ErpContext dbContext) => _dbContext = dbContext;
+    public AddProductHandler(ErpContext dbContext, IClock clock)
+    {
+        _clock = clock;
+        _dbContext = dbContext;
+    }
 
     public async Task HandleAsync(AddProductCommand command)
     {
@@ -27,8 +33,8 @@ internal sealed class AddProductHandler : ICommandHandler<AddProductCommand>
             Oembrand = command.OemBrand,
             ListPrice = command.ListPrice,
             WeightKg = command.WeightKg,
-            CreatedAt = DateTime.UtcNow,
-            LastUpdatedAt = DateTime.UtcNow
+            CreatedAt = _clock.Current(),
+            LastUpdatedAt = _clock.Current()
         };
 
         _dbContext.Products.Add(product);

@@ -35,6 +35,7 @@ public static class Extensions
         services.AddEndpointsApiExplorer();
 
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IWebService, WebService>();
 
         var infrastructureAssembly = typeof(AppOptions).Assembly;
 

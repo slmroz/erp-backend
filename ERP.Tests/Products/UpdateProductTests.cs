@@ -1,4 +1,5 @@
-﻿using ERP.Services.Products.Commands;
+﻿using ERP.Model.Model;
+using ERP.Services.Products.Commands;
 using ERP.Services.Products.Commands.Handlers;
 using FluentAssertions;
 
@@ -11,6 +12,7 @@ public class UpdateProductTests
         using var context = TestDbContextFactory.Create();
         var clock = new ERP.Infrastructure.Time.Clock();
 
+        context.ProductGroups.Add(new ProductGroup { Id = 1, Name = "Brake Systems", CreatedAt = DateTime.UtcNow });
         var product = new ERP.Model.Model.Product
         {
             Id = 1,

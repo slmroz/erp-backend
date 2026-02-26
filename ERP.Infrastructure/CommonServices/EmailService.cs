@@ -1,4 +1,5 @@
-﻿using ERP.Services.Abstractions.CommonServices;
+﻿using ERP.Infrastructure.CommonServices.DTO;
+using ERP.Services.Abstractions.CommonServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Net;
@@ -9,14 +10,14 @@ public sealed class EmailService : IEmailService
 {
     private readonly IConfiguration _configuration;
     private readonly ILogger<EmailService> _logger;
-    private readonly Dictionary<string, EmailTemplateConfig> _templates;
+    private readonly Dictionary<string, EmailTemplateConfigDto> _templates;
 
     public EmailService(IConfiguration configuration, ILogger<EmailService> logger)
     {
         _configuration = configuration;
         _logger = logger;
-        _templates = _configuration.GetSection("EmailTemplates").Get<Dictionary<string, EmailTemplateConfig>>()
-            ?? new Dictionary<string, EmailTemplateConfig>();
+        _templates = _configuration.GetSection("EmailTemplates").Get<Dictionary<string, EmailTemplateConfigDto>>()
+            ?? new Dictionary<string, EmailTemplateConfigDto>();
     }
 
     public async Task SendAsync(string toEmail, string templateKey, Dictionary<string, string>? model = null)
