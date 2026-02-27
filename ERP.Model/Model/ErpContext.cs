@@ -27,7 +27,6 @@ public partial class ErpContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("slmroz_dbadmin");
@@ -41,8 +40,8 @@ public partial class ErpContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(50);
-            entity.Property(e => e.LastModifiedAt).HasColumnType("datetime");
             entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.PhoneNo).HasMaxLength(50);
             entity.Property(e => e.RemovedAt).HasColumnType("datetime");
 
@@ -78,7 +77,7 @@ public partial class ErpContext : DbContext
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
             entity.Property(e => e.Facebook).HasMaxLength(100);
-            entity.Property(e => e.LastModifiedAt).HasColumnType("datetime");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.Name).HasMaxLength(200);
             entity.Property(e => e.RemovedAt).HasColumnType("datetime");
             entity.Property(e => e.TaxId).HasMaxLength(100);
@@ -90,7 +89,7 @@ public partial class ErpContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__Products__3214EC078DD09984");
 
-            entity.ToTable("Products", "Crm");
+            entity.ToTable("Product", "Catalog");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Description).HasMaxLength(500);
@@ -114,7 +113,7 @@ public partial class ErpContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PK__ProductG__3214EC072A8E1E23");
 
-            entity.ToTable("ProductGroups", "Crm");
+            entity.ToTable("ProductGroup", "Catalog");
 
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
             entity.Property(e => e.Description).HasMaxLength(500);
@@ -131,8 +130,8 @@ public partial class ErpContext : DbContext
 
             entity.Property(e => e.Email).HasMaxLength(100);
             entity.Property(e => e.FirstName).HasMaxLength(50);
-            entity.Property(e => e.LastModifiedAt).HasColumnType("datetime");
             entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.Password).HasMaxLength(200);
             entity.Property(e => e.PasswordResetExpires).HasColumnType("datetime");
             entity.Property(e => e.PasswordResetToken).HasMaxLength(200);

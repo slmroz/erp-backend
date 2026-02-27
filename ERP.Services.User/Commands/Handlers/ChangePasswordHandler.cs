@@ -51,7 +51,7 @@ internal sealed class ChangePasswordHandler : ICommandHandler<ChangePasswordComm
         }
 
         user.Password = newSecuredPassword;
-        user.LastModifiedAt = _clock.Current();  
+        user.LastUpdatedAt = _clock.Current();  
 
         await _dbContext.SaveChangesAsync().ConfigureAwait(false);
     }

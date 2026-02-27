@@ -25,7 +25,7 @@ public partial class Customer
 
     public DateTime CreatedAt { get; set; }
 
-    public DateTime? LastModifiedAt { get; set; }
+    public DateTime? LastUpdatedAt { get; set; }
 
     public DateTime? RemovedAt { get; set; }
 

@@ -43,7 +43,7 @@ public class ResetPasswordTests
         updatedUser!.Password.Should().Be("newhashedpass");
         updatedUser.PasswordResetToken.Should().BeNull();
         updatedUser.PasswordResetExpires.Should().BeNull();
-        updatedUser.LastModifiedAt.Should().NotBeNull();
+        updatedUser.LastUpdatedAt.Should().NotBeNull();
     }
 
     [Fact]
@@ -125,7 +125,7 @@ public class ResetPasswordTests
         updatedUser!.PasswordResetToken.Should().BeNull();
         updatedUser.PasswordResetExpires.Should().BeNull();
         updatedUser.Password.Should().NotBe("oldpass");
-        updatedUser.LastModifiedAt.Should().NotBeNull();
+        updatedUser.LastUpdatedAt.Should().NotBeNull();
     }
 
     [Fact]

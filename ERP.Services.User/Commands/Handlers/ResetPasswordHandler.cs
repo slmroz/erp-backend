@@ -34,7 +34,7 @@ internal sealed class ResetPasswordHandler : ICommandHandler<ResetPasswordComman
         user.Password = newSecuredPassword;
         user.PasswordResetToken = null;
         user.PasswordResetExpires = null;
-        user.LastModifiedAt = _clock.Current();
+        user.LastUpdatedAt = _clock.Current();
 
         await _dbContext.SaveChangesAsync().ConfigureAwait(false);
     }

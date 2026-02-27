@@ -30,6 +30,6 @@ public class UpdateCustomerTests
         var updated = await context.Customers.FindAsync(customer.Id);
 
         updated!.Name.Should().Be("New");
-        updated.LastModifiedAt.Should().NotBeNull();
+        updated.LastUpdatedAt.Should().NotBeNull();
     }
 }

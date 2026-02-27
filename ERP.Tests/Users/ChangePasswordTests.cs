@@ -46,7 +46,7 @@ public class ChangePasswordTests
 
         var updatedUser = await context.Users.FindAsync(1);
         updatedUser!.Password.Should().Be("newhashedpass");
-        updatedUser.LastModifiedAt.Should().NotBeNull();
+        updatedUser.LastUpdatedAt.Should().NotBeNull();
     }
 
     [Fact]

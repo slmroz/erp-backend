@@ -45,7 +45,7 @@ public class UpdateUserTests
         updated.FirstName.Should().Be("New");
         updated.LastName.Should().Be("User");
         updated.Role.Should().Be((int)Model.Enum.Role.Admin);
-        updated.LastModifiedAt.Should().NotBeNull();
+        updated.LastUpdatedAt.Should().NotBeNull();
     }
 
     [Fact]
@@ -132,7 +132,7 @@ public class UpdateUserTests
             Id = 1,
             Email = "test@test.com",
             Password = "P@$$",
-            LastModifiedAt = new DateTime(2026, 2, 16, 10, 0, 0) // Old timestamp
+            LastUpdatedAt = new DateTime(2026, 2, 16, 10, 0, 0) // Old timestamp
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -145,7 +145,7 @@ public class UpdateUserTests
 
         // Assert
         var updated = await context.Users.FindAsync(1);
-        updated!.LastModifiedAt.Should().Be(new DateTime(2026, 2, 16, 15, 30, 0));
+        updated!.LastUpdatedAt.Should().Be(new DateTime(2026, 2, 16, 15, 30, 0));
     }
 }
 

@@ -32,7 +32,7 @@ public sealed class UpdateCustomerHandler : ICommandHandler<UpdateCustomerComman
         customer.Country = command.Country;
         customer.Www = command.Www;
         customer.Facebook = command.Facebook;
-        customer.LastModifiedAt = _clock.Current();
+        customer.LastUpdatedAt = _clock.Current();
 
         await _db.SaveChangesAsync();
     }

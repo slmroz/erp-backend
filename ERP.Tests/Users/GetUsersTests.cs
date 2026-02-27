@@ -134,7 +134,7 @@ public static class UserTestFactory
             LastName = lastName,
             Role = role,
             CreatedAt = DateTime.UtcNow.AddDays(-1),
-            LastModifiedAt = DateTime.UtcNow.AddDays(-1),
+            LastUpdatedAt = DateTime.UtcNow.AddDays(-1),
             Password = "TestPassword"
         };
     }

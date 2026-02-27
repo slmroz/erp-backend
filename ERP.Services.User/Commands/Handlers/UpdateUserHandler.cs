@@ -25,7 +25,7 @@ internal sealed class UpdateUserHandler : ICommandHandler<UpdateUserCommand>
             throw new KeyNotFoundException("User not found");
 
         user.Role = command.Role;
-        user.LastModifiedAt = _clock.Current();
+        user.LastUpdatedAt = _clock.Current();
         user.FirstName = command.FirstName;
         user.LastName = command.LastName;
         user.Email = command.Email;
