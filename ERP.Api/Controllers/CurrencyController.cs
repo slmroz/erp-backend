@@ -35,7 +35,7 @@ public class CurrencyController : ControllerBase
         _removeCurrencyHandler = removeCurrencyHandler;
     }
 
-    [HttpPost]
+    [HttpPost("Refresh")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<ActionResult> UpdateList([FromBody] UpdateCurrencyListCommand command)
     {
@@ -54,7 +54,7 @@ public class CurrencyController : ControllerBase
     }
 
     /// <summary>
-    /// Paginowana lista kursów walut z filtrem Base/Target
+    /// Paginowana lista kursów walut z filtrem Base/Target + refresh z API
     /// </summary>
     [HttpGet]
     public async Task<ActionResult<PagedResult<CurrencyDto>>> GetList(
@@ -62,15 +62,19 @@ public class CurrencyController : ControllerBase
         [FromQuery] int pageSize = 20,
         [FromQuery] string? baseCurrency = null,
         [FromQuery] string? targetCurrency = null,
-        [FromQuery] bool? refresh = null)
+        [FromQuery] bool? refresh = null,        // Zachowane
+        [FromQuery] string sortBy = "targetcurrency",  
+        [FromQuery] string sortOrder = "asc")       
     {
-        if(refresh == true)
+        // ✅ Refresh z API (bez await - fire & forget)
+        if (refresh == true)
         {
-            await _updateCurrencyListHandler.HandleAsync(new UpdateCurrencyListCommand());
+            _ = Task.Run(async () =>
+                await _updateCurrencyListHandler.HandleAsync(new UpdateCurrencyListCommand()));
         }
 
         var result = await _getCurrenciesHandler.HandleAsync(
-            new GetCurrenciesQuery(page, pageSize, baseCurrency, targetCurrency));
+            new GetCurrenciesQuery(page, pageSize, baseCurrency, targetCurrency, sortBy, sortOrder));
         return Ok(result);
     }
 

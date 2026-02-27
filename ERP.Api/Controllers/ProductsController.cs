@@ -49,10 +49,12 @@ public class ProductsController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         [FromQuery] string? search = null,
-        [FromQuery] int? groupId = null)
+        [FromQuery] int? groupId = null,
+        [FromQuery] string sortBy = "partnumber",   
+        [FromQuery] string sortOrder = "asc")       
     {
         var result = await _getProductsHandler.HandleAsync(
-            new GetProductsQuery(page, pageSize, search, groupId));
+            new GetProductsQuery(page, pageSize, search, groupId, sortBy, sortOrder));
         return Ok(result);
     }
 

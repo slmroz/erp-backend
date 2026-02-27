@@ -41,10 +41,12 @@ public class ContactsController : ControllerBase
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
         [FromQuery] string? search = null,
-        [FromQuery] int? customerId = null)
+        [FromQuery] int? customerId = null,
+        [FromQuery] string sortBy = "lastname",    
+        [FromQuery] string sortOrder = "asc")      
     {
         var result = await _getContactsHandler.HandleAsync(
-            new GetContactsQuery(page, pageSize, search, customerId));
+            new GetContactsQuery(page, pageSize, search, customerId, sortBy, sortOrder));
         return Ok(result);
     }
 

@@ -45,7 +45,9 @@ public class CustomersController : ControllerBase
     public async Task<ActionResult<PagedResult<CustomerDto>>> GetList(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
-        [FromQuery] string? search = null)
+        [FromQuery] string? search = null,
+        [FromQuery] string sortBy = "name",       
+        [FromQuery] string sortOrder = "asc")
     {
         var result = await _getCustomersHandler.HandleAsync(
             new GetCustomersQuery(page, pageSize, search));

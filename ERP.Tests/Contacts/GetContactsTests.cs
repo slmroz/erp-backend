@@ -1,4 +1,5 @@
-﻿using ERP.Services.Customer.Commands;
+﻿using ERP.Model.Model;
+using ERP.Services.Customer.Commands;
 using ERP.Services.Customer.Queries.Handlers;
 using FluentAssertions;
 
@@ -61,5 +62,43 @@ public class GetContactsTests
         result.Items.Should().HaveCount(1);
         result.Items[0].CustomerId.Should().Be(customer1.Id);
     }
+
+    [Fact]
+    public async Task GetContacts_ShouldSearchCaseInsensitive()
+    {
+        using var context = TestDbContextFactory.Create();
+        context.Customers.Add(new Customer { Id = 1, Name = "Acme Corp" });
+        context.Contacts.AddRange(
+            new Contact { FirstName = "JAN", LastName = "Kowalski", Email = "jan@test.com", CustomerId = 1, CreatedAt = DateTime.UtcNow },
+            new Contact { FirstName = "Anna", LastName = "Nowak", Email = "anna@test.com", CustomerId = 1, CreatedAt = DateTime.UtcNow }
+        );
+        await context.SaveChangesAsync();
+
+        var handler = new GetContactsHandler(context);
+        var result = await handler.HandleAsync(new GetContactsQuery(Search: "jan"));
+
+        result.Items.Should().HaveCount(1);
+        result.Items[0].FirstName.Should().Be("JAN");  // Znajdzie mimo wielkości liter
+    }
+
+    [Fact]
+    public async Task GetContacts_ShouldSortByLastNameDesc()
+    {
+        using var context = TestDbContextFactory.Create();
+        context.Contacts.AddRange(
+            new Contact { FirstName = "Jan", LastName = "Nowak", CreatedAt = DateTime.UtcNow },
+            new Contact { FirstName = "Anna", LastName = "Zając", CreatedAt = DateTime.UtcNow },
+            new Contact { FirstName = "Piotr", LastName = "Kowalski", CreatedAt = DateTime.UtcNow }
+        );
+        await context.SaveChangesAsync();
+
+        var handler = new GetContactsHandler(context);
+        var result = await handler.HandleAsync(new GetContactsQuery(SortBy: "lastname", SortOrder: "desc"));
+
+        result.Items[0].LastName.Should().Be("Zając");     // Z > N > K
+        result.Items[1].LastName.Should().Be("Nowak");
+        result.Items[2].LastName.Should().Be("Kowalski");
+    }
+
 }
 

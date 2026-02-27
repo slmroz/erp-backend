@@ -14,22 +14,24 @@ internal sealed class GetProductGroupsHandler : IQueryHandler<GetProductGroupsQu
 
     public async Task<PagedResult<ProductGroupDto>> HandleAsync(GetProductGroupsQuery query)
     {
-        var filterQuery = _dbContext.ProductGroups.Where(g => g.RemovedAt == null);
-
-        if (!string.IsNullOrEmpty(query.Search))
-            filterQuery = filterQuery.Where(g => g.Name.ToLower().Contains(query.Search.ToLower()));
-
-        var total = await filterQuery.CountAsync();
-
-        var dataQuery = _dbContext.ProductGroups
+        // ✅ Pojedyncza query z Include - wydajniejsze
+        var baseQuery = _dbContext.ProductGroups
             .Include(g => g.Products.Where(p => p.RemovedAt == null))
             .Where(g => g.RemovedAt == null);
 
+        // Case-insensitive search
         if (!string.IsNullOrEmpty(query.Search))
-            dataQuery = dataQuery.Where(g => g.Name.ToLower().Contains(query.Search.ToLower()));
+        {
+            var searchLower = query.Search.ToLower();
+            baseQuery = baseQuery.Where(g => g.Name.ToLower().Contains(searchLower));
+        }
 
-        var items = await dataQuery
-            .OrderBy(g => g.Name)
+        var total = await baseQuery.CountAsync();
+
+        // ✅ Dynamiczne sortowanie
+        baseQuery = ApplySorting(baseQuery, query.SortBy, query.SortOrder);
+
+        var items = await baseQuery
             .Skip((query.Page - 1) * query.PageSize)
             .Take(query.PageSize)
             .Select(g => new ProductGroupDto
@@ -37,10 +39,10 @@ internal sealed class GetProductGroupsHandler : IQueryHandler<GetProductGroupsQu
                 Id = g.Id,
                 Name = g.Name,
                 Description = g.Description,
-                CreatedAt = (DateTime)g.CreatedAt,
+                CreatedAt = (DateTime)g.CreatedAt,         
                 LastUpdatedAt = g.LastUpdatedAt,
                 RemovedAt = g.RemovedAt,
-                ProductCount = g.Products.Count
+                ProductCount = g.Products.Count    // Licznik zachowany
             })
             .ToListAsync();
 
@@ -49,6 +51,19 @@ internal sealed class GetProductGroupsHandler : IQueryHandler<GetProductGroupsQu
             TotalCount = total,
             Items = items
         };
+    }
 
+    private IQueryable<ProductGroup> ApplySorting(IQueryable<ProductGroup> query, string sortBy, string sortOrder)
+    {
+        var isDescending = sortOrder.ToLower() == "desc";
+
+        return sortBy.ToLower() switch
+        {
+            "name" => isDescending ? query.OrderByDescending(g => g.Name.ToLower()) : query.OrderBy(g => g.Name.ToLower()),
+            "productcount" => isDescending ? query.OrderByDescending(g => g.Products.Count()) : query.OrderBy(g => g.Products.Count()),
+            "createdat" => isDescending ? query.OrderByDescending(g => g.CreatedAt) : query.OrderBy(g => g.CreatedAt),
+            "lastupdatedat" => isDescending ? query.OrderByDescending(g => g.LastUpdatedAt) : query.OrderBy(g => g.LastUpdatedAt),
+            _ => query.OrderBy(g => g.Name.ToLower())
+        };
     }
 }

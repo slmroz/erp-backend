@@ -1,5 +1,6 @@
 using ERP.Services.Abstractions.CommonServices;
 using ERP.Services.Abstractions.CQRS;
+using ERP.Services.Abstractions.Search;
 using ERP.Services.Abstractions.Security;
 using ERP.Services.User.Commands;
 using ERP.Services.User.DTO;
@@ -14,7 +15,7 @@ namespace ERP.Controllers;
 [Route("[controller]")]
 public class UserController : ControllerBase
 {
-    private readonly IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> _getUsersHandler;
+    private readonly IQueryHandler<GetUsersQuery, PagedResult<UserDto>> _getUsersHandler;
     private readonly IQueryHandler<GetUserQuery, UserDto> _getUserHandler;
     private readonly ICommandHandler<SignUpCommand> _signUpHandler;
     private readonly ICommandHandler<SignInCommand> _signInHandler;
@@ -33,7 +34,7 @@ public class UserController : ControllerBase
         ICommandHandler<ChangePasswordCommand> changePasswordHandler,
         ICommandHandler<ForgotPasswordCommand> forgotPasswordHandler,
         ICommandHandler<ResetPasswordCommand> resetPasswordHandler,
-        IQueryHandler<GetUsersQuery, IEnumerable<UserDto>> getUsersHandler,
+        IQueryHandler<GetUsersQuery, PagedResult<UserDto>> getUsersHandler,
         IQueryHandler<GetUserQuery, UserDto> getUserHandler,
         ITokenStorage tokenStorage,
         IConfiguration configuration,
@@ -88,14 +89,24 @@ public class UserController : ControllerBase
     }
 
     [HttpGet]
-    [SwaggerOperation("Get list of all the users")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [SwaggerOperation("Get paginated list of users with search and filters")]
+    [ProducesResponseType(typeof(PagedResult<UserDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
     //[Authorize(Policy = "is-admin")]
     //[Authorize(Roles = "Admin")]
-    public async Task<ActionResult<IEnumerable<UserDto>>> Get([FromQuery] GetUsersQuery query)
-        => Ok(await _getUsersHandler.HandleAsync(query));
+    public async Task<ActionResult<PagedResult<UserDto>>> GetList(
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 20,
+    [FromQuery] string? search = null,
+    [FromQuery] int? role = null,
+    [FromQuery] string sortBy = "lastname",
+    [FromQuery] string sortOrder = "asc")
+    {
+        var query = new GetUsersQuery(page, pageSize, search, role, sortBy, sortOrder);
+        var result = await _getUsersHandler.HandleAsync(query);
+        return Ok(result);
+    }
 
     [HttpPost]
     [SwaggerOperation("Create the user account")]

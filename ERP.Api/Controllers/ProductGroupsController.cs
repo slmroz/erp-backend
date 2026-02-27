@@ -49,10 +49,12 @@ public class ProductGroupsController : ControllerBase
     public async Task<ActionResult<PagedResult<ProductGroupDto>>> GetList(
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 20,
-        [FromQuery] string? search = null)
+        [FromQuery] string? search = null,
+        [FromQuery] string sortBy = "name",      
+        [FromQuery] string sortOrder = "asc")    
     {
         var result = await _getProductGroupsHandler.HandleAsync(
-            new GetProductGroupsQuery(page, pageSize, search));
+            new GetProductGroupsQuery(page, pageSize, search, sortBy, sortOrder));
         return Ok(result);
     }
 

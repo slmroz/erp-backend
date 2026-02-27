@@ -1,6 +1,7 @@
 ﻿using ERP.Model.Model;
 using ERP.Services.Products.Queries;
 using ERP.Services.Products.Queries.Handlers;
+using ERP.Tests.ProductGroups;
 using FluentAssertions;
 
 namespace ERP.Tests.Products;
@@ -89,4 +90,54 @@ public class GetProductsTests
         result.Items.Should().HaveCount(1);
         result.Items[0].PartNumber.Should().Be("BRK002");
     }
+
+    [Fact]
+    public async Task GetProducts_ShouldSortByListPriceDesc()
+    {
+        using var context = TestDbContextFactory.Create();
+        context.ProductGroups.Add(ProductGroupTestFactory.CreateActive("Brakes"));
+        await context.SaveChangesAsync();  // ID = 1
+        var groupId = context.ProductGroups.First().Id;
+
+        context.Products.AddRange(
+            new Product { ProductGroupId = groupId, PartNumber = "BRK001", Name = "Brake Pad", ListPrice = 150.00m, Oembrand = "Bosch", CreatedAt = DateTime.UtcNow },
+            new Product { ProductGroupId = groupId, PartNumber = "BRK002", Name = "Disc", ListPrice = 250.00m, Oembrand = "Brembo", CreatedAt = DateTime.UtcNow },
+            new Product { ProductGroupId = groupId, PartNumber = "BRK003", Name = "Caliper", ListPrice = 450.00m, Oembrand = "Brembo", CreatedAt = DateTime.UtcNow }
+        );
+        await context.SaveChangesAsync();
+
+        var handler = new GetProductsHandler(context);
+        var result = await handler.HandleAsync(new GetProductsQuery(SortBy: "listprice", SortOrder: "desc"));
+
+        result.Items[0].ListPrice.Should().Be(450.00m);  // Caliper najdroższy
+        result.Items[1].ListPrice.Should().Be(250.00m);
+        result.Items[2].ListPrice.Should().Be(150.00m);
+    }
+
+    [Fact]
+    public async Task GetProducts_ShouldSearchCaseInsensitive()
+    {
+        using var context = TestDbContextFactory.Create();
+
+        var group = ProductGroupTestFactory.CreateActive("Brake Systems");
+        context.ProductGroups.Add(group);
+        await context.SaveChangesAsync();  // ID = 1
+
+        context.Products.Add(new Product
+        {
+            ProductGroupId = group.Id,
+            PartNumber = "BRK001",
+            Name = "BRAKE PAD",
+            Oembrand = "BOSCH",
+            CreatedAt = DateTime.UtcNow
+        });
+        await context.SaveChangesAsync();
+
+        var handler = new GetProductsHandler(context);
+        var result = await handler.HandleAsync(new GetProductsQuery(Search: "brake"));
+
+        result.Items.Should().HaveCount(1);
+        result.Items[0].Name.Should().Be("BRAKE PAD");
+    }
+
 }
