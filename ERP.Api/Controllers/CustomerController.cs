@@ -50,8 +50,7 @@ public class CustomersController : ControllerBase
         [FromQuery] string sortOrder = "asc")
     {
         var result = await _getCustomersHandler.HandleAsync(
-            new GetCustomersQuery(page, pageSize, search));
-
+            new GetCustomersQuery(page, pageSize, search, sortBy, sortOrder));
         return Ok(result);
     }
 

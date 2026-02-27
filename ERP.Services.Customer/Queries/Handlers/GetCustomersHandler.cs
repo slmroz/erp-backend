@@ -32,7 +32,7 @@ public sealed class GetCustomersHandler : IQueryHandler<GetCustomersQuery, Paged
         baseQuery = ApplySorting(baseQuery, query.SortBy, query.SortOrder);
 
         var items = await baseQuery
-            .OrderBy(c => c.Name)
+            //.OrderBy(c => c.Name)
             .Skip((query.Page - 1) * query.PageSize)
             .Take(query.PageSize)
             .Select(c => new CustomerDto
