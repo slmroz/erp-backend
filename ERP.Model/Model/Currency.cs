@@ -18,4 +18,6 @@ public partial class Currency
     public DateTime? RemovedAt { get; set; }
 
     public DateTime? LastUpdatedAt { get; set; }
+
+    public virtual ICollection<PriceList> PriceLists { get; set; } = new List<PriceList>();
 }

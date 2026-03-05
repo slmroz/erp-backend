@@ -27,5 +27,7 @@ public partial class Product
 
     public DateTime? LastUpdatedAt { get; set; }
 
+    public virtual ICollection<PriceListItem> PriceListItems { get; set; } = new List<PriceListItem>();
+
     public virtual ProductGroup ProductGroup { get; set; } = null!;
 }

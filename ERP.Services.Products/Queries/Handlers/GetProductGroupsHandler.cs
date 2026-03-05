@@ -5,7 +5,6 @@ using ERP.Services.Products.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP.Services.Products.Queries.Handlers;
-// GetProductGroupsHandler.cs
 internal sealed class GetProductGroupsHandler : IQueryHandler<GetProductGroupsQuery, PagedResult<ProductGroupDto>>
 {
     private readonly ErpContext _dbContext;

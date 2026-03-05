@@ -26,4 +26,16 @@ public partial class User
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
+
+    public virtual ICollection<PriceList> PriceListCreatedByNavigations { get; set; } = new List<PriceList>();
+
+    public virtual ICollection<PriceListItem> PriceListItemCreatedByNavigations { get; set; } = new List<PriceListItem>();
+
+    public virtual ICollection<PriceListItem> PriceListItemLastUpdatedByNavigations { get; set; } = new List<PriceListItem>();
+
+    public virtual ICollection<PriceListItem> PriceListItemRemovedByNavigations { get; set; } = new List<PriceListItem>();
+
+    public virtual ICollection<PriceList> PriceListLastUpdatedByNavigations { get; set; } = new List<PriceList>();
+
+    public virtual ICollection<PriceList> PriceListRemovedByNavigations { get; set; } = new List<PriceList>();
 }

@@ -21,6 +21,10 @@ public partial class ErpContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<PriceList> PriceLists { get; set; }
+
+    public virtual DbSet<PriceListItem> PriceListItems { get; set; }
+
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<ProductGroup> ProductGroups { get; set; }
@@ -83,6 +87,71 @@ public partial class ErpContext : DbContext
             entity.Property(e => e.TaxId).HasMaxLength(100);
             entity.Property(e => e.Www).HasMaxLength(100);
             entity.Property(e => e.ZipCode).HasMaxLength(10);
+        });
+
+        modelBuilder.Entity<PriceList>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PriceLis__3214EC0773DA311F");
+
+            entity.ToTable("PriceList", "Catalog");
+
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.DiscountPercentage).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.RemovedAt).HasColumnType("datetime");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.PriceListCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("FK__PriceList__Creat__25869641");
+
+            entity.HasOne(d => d.Currency).WithMany(p => p.PriceLists)
+                .HasForeignKey(d => d.CurrencyId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PriceList__Curre__300424B4");
+
+            entity.HasOne(d => d.LastUpdatedByNavigation).WithMany(p => p.PriceListLastUpdatedByNavigations)
+                .HasForeignKey(d => d.LastUpdatedBy)
+                .HasConstraintName("FK__PriceList__LastU__276EDEB3");
+
+            entity.HasOne(d => d.RemovedByNavigation).WithMany(p => p.PriceListRemovedByNavigations)
+                .HasForeignKey(d => d.RemovedBy)
+                .HasConstraintName("FK__PriceList__Remov__267ABA7A");
+        });
+
+        modelBuilder.Entity<PriceListItem>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__PriceLis__3214EC0780A8A9A8");
+
+            entity.ToTable("PriceListItem", "Catalog");
+
+            entity.Property(e => e.CreatedAt).HasColumnType("datetime");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.RemovedAt).HasColumnType("datetime");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.PriceListItemCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("FK__PriceList__Creat__2C3393D0");
+
+            entity.HasOne(d => d.LastUpdatedByNavigation).WithMany(p => p.PriceListItemLastUpdatedByNavigations)
+                .HasForeignKey(d => d.LastUpdatedBy)
+                .HasConstraintName("FK__PriceList__LastU__2E1BDC42");
+
+            entity.HasOne(d => d.PriceList).WithMany(p => p.PriceListItems)
+                .HasForeignKey(d => d.PriceListId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PriceList__Price__2F10007B");
+
+            entity.HasOne(d => d.Product).WithMany(p => p.PriceListItems)
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__PriceList__Produ__2B3F6F97");
+
+            entity.HasOne(d => d.RemovedByNavigation).WithMany(p => p.PriceListItemRemovedByNavigations)
+                .HasForeignKey(d => d.RemovedBy)
+                .HasConstraintName("FK__PriceList__Remov__2D27B809");
         });
 
         modelBuilder.Entity<Product>(entity =>
