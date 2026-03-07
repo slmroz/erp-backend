@@ -25,18 +25,21 @@ internal sealed class AddPriceListHandler : ICommandHandler<AddPriceListCommand>
         {
             Name = command.Name,
             Description = command.Description,
+            CurrencyId = command.CurrencyId,
+            DiscountPercentage = command.DiscountPercentage,
             CreatedAt = _clock.Current(),
             CreatedBy = command.CreatedBy
         };
 
-        await _dbContext.PriceLists.AddAsync(priceList);
 
-        if(command.FillItems)
+
+        await _dbContext.PriceLists.AddAsync(priceList);
+        await _dbContext.SaveChangesAsync();
+
+        if (command.FillItems)
         {
             await AddBulkPriceListItems(priceList.Id, command.CurrencyId, command.DiscountPercentage, command.CreatedBy);
         }
-
-        await _dbContext.SaveChangesAsync();
 
         command.Id = priceList.Id;
     }
