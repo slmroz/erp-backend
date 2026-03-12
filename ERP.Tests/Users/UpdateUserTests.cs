@@ -22,7 +22,7 @@ public class UpdateUserTests
             FirstName = "Old",
             LastName = "User",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.User,
+            Role = (int)Model.Enum.UserRole.User,
             CreatedAt = DateTime.UtcNow
         };
         context.Users.Add(user);
@@ -34,7 +34,7 @@ public class UpdateUserTests
             Email: "new@test.com",
             FirstName: "New",
             LastName: "User",
-            Role: (int)Model.Enum.Role.Admin);
+            Role: (int)Model.Enum.UserRole.Admin);
 
         // Act
         await handler.HandleAsync(command);
@@ -44,7 +44,7 @@ public class UpdateUserTests
         updated!.Email.Should().Be("new@test.com");
         updated.FirstName.Should().Be("New");
         updated.LastName.Should().Be("User");
-        updated.Role.Should().Be((int)Model.Enum.Role.Admin);
+        updated.Role.Should().Be((int)Model.Enum.UserRole.Admin);
         updated.LastUpdatedAt.Should().NotBeNull();
     }
 
@@ -54,7 +54,7 @@ public class UpdateUserTests
         using var context = TestDbContextFactory.Create();
         var clock = new ERP.Infrastructure.Time.Clock();
         var handler = new UpdateUserHandler(context, clock);
-        var command = new UpdateUserCommand(999, (int)Model.Enum.Role.User, "test@test.com", "Test", "User");
+        var command = new UpdateUserCommand(999, (int)Model.Enum.UserRole.User, "test@test.com", "Test", "User");
 
         // Act & Assert
         await Assert.ThrowsAsync<KeyNotFoundException>(
@@ -79,7 +79,7 @@ public class UpdateUserTests
         await context.SaveChangesAsync();
 
         var handler = new UpdateUserHandler(context, clock);
-        var command = new UpdateUserCommand(1, (int)Model.Enum.Role.User, "new@test.com", "New", "Name");
+        var command = new UpdateUserCommand(1, (int)Model.Enum.UserRole.User, "new@test.com", "New", "Name");
 
         // Act & Assert
         await Assert.ThrowsAsync<KeyNotFoundException>(
@@ -98,7 +98,7 @@ public class UpdateUserTests
             Id = 42,
             Email = "admin-candidate@test.com",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.User
+            Role = (int)Model.Enum.UserRole.User
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -106,7 +106,7 @@ public class UpdateUserTests
         var handler = new UpdateUserHandler(context, clock);
         var command = new UpdateUserCommand(
             42,
-            (int)Model.Enum.Role.Admin,
+            (int)Model.Enum.UserRole.Admin,
             "admin@test.com",
             "Admin",
             "User");
@@ -116,7 +116,7 @@ public class UpdateUserTests
 
         // Assert
         var updated = await context.Users.FindAsync(42);
-        updated!.Role.Should().Be((int)Model.Enum.Role.Admin);
+        updated!.Role.Should().Be((int)Model.Enum.UserRole.Admin);
     }
 
     [Fact]
@@ -138,7 +138,7 @@ public class UpdateUserTests
         await context.SaveChangesAsync();
 
         var handler = new UpdateUserHandler(context, clock.Object);
-        var command = new UpdateUserCommand(1, (int)Model.Enum.Role.User, "updated@test.com", "Updated", "User");
+        var command = new UpdateUserCommand(1, (int)Model.Enum.UserRole.User, "updated@test.com", "Updated", "User");
 
         // Act
         await handler.HandleAsync(command);

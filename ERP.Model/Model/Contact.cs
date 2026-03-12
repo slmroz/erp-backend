@@ -24,4 +24,6 @@ public partial class Contact
     public DateTime? RemovedAt { get; set; }
 
     public virtual Customer? Customer { get; set; }
+
+    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
 }

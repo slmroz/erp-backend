@@ -1,4 +1,5 @@
 ﻿using ERP.Infrastructure.CommonServices.DTO;
+using ERP.Infrastructure.Config;
 using ERP.Services.Abstractions.CommonServices;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,11 @@ public sealed class EmailService : IEmailService
         if (!_templates.TryGetValue(templateKey, out var template))
         {
             throw new ArgumentException($"Template '{templateKey}' not found");
+        }
+
+        if(Enum.IsDefined(typeof(EmailAddresses), toEmail)) {
+            var emailAddresses = _configuration.GetSection("EmailAddresses");
+            toEmail = emailAddresses[toEmail];
         }
 
         var subject = RenderTemplate(template.Subject, model);

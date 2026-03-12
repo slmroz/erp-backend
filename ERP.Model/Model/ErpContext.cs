@@ -21,15 +21,25 @@ public partial class ErpContext : DbContext
 
     public virtual DbSet<Customer> Customers { get; set; }
 
+    public virtual DbSet<Lead> Leads { get; set; }
+
+    public virtual DbSet<LeadSource> LeadSources { get; set; }
+
+    public virtual DbSet<LeadStatus> LeadStatuses { get; set; }
+
     public virtual DbSet<PriceList> PriceLists { get; set; }
 
     public virtual DbSet<PriceListItem> PriceListItems { get; set; }
+
+    public virtual DbSet<Priority> Priorities { get; set; }
 
     public virtual DbSet<Product> Products { get; set; }
 
     public virtual DbSet<ProductGroup> ProductGroups { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<UserRole> UserRoles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -87,6 +97,83 @@ public partial class ErpContext : DbContext
             entity.Property(e => e.TaxId).HasMaxLength(100);
             entity.Property(e => e.Www).HasMaxLength(100);
             entity.Property(e => e.ZipCode).HasMaxLength(10);
+        });
+
+        modelBuilder.Entity<Lead>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Lead__3214EC07D72D75F3");
+
+            entity.ToTable("Lead", "Crm");
+
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.Description).HasMaxLength(1000);
+            entity.Property(e => e.EstimatedValue).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.LastUpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.RemovedAt).HasColumnType("datetime");
+            entity.Property(e => e.Subject).HasMaxLength(200);
+
+            entity.HasOne(d => d.Contact).WithMany(p => p.Leads)
+                .HasForeignKey(d => d.ContactId)
+                .HasConstraintName("FK__Lead__ContactId__398D8EEE");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.LeadCreatedByNavigations)
+                .HasForeignKey(d => d.CreatedBy)
+                .HasConstraintName("FK__Lead__CreatedBy__3E52440B");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.Leads)
+                .HasForeignKey(d => d.CustomerId)
+                .HasConstraintName("FK__Lead__CustomerId__38996AB5");
+
+            entity.HasOne(d => d.LastUpdatedByNavigation).WithMany(p => p.LeadLastUpdatedByNavigations)
+                .HasForeignKey(d => d.LastUpdatedBy)
+                .HasConstraintName("FK__Lead__LastUpdate__3F466844");
+
+            entity.HasOne(d => d.LeadSource).WithMany(p => p.Leads)
+                .HasForeignKey(d => d.LeadSourceId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Lead__LeadSource__3A81B327");
+
+            entity.HasOne(d => d.Priority).WithMany(p => p.Leads)
+                .HasForeignKey(d => d.PriorityId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Lead__PriorityId__3C69FB99");
+
+            entity.HasOne(d => d.RemovedByNavigation).WithMany(p => p.LeadRemovedByNavigations)
+                .HasForeignKey(d => d.RemovedBy)
+                .HasConstraintName("FK__Lead__RemovedBy__403A8C7D");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Leads)
+                .HasForeignKey(d => d.StatusId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Lead__StatusId__3B75D760");
+        });
+
+        modelBuilder.Entity<LeadSource>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__LeadSour__3213E83F62D7B58D");
+
+            entity.ToTable("LeadSource", "Dictionary");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Label)
+                .HasMaxLength(100)
+                .HasColumnName("label");
+        });
+
+        modelBuilder.Entity<LeadStatus>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__LeadStat__3213E83F5BF1A05E");
+
+            entity.ToTable("LeadStatus", "Dictionary");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Label)
+                .HasMaxLength(100)
+                .HasColumnName("label");
         });
 
         modelBuilder.Entity<PriceList>(entity =>
@@ -154,6 +241,20 @@ public partial class ErpContext : DbContext
                 .HasConstraintName("FK__PriceList__Remov__2D27B809");
         });
 
+        modelBuilder.Entity<Priority>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Priority__3213E83F7368CCA4");
+
+            entity.ToTable("Priority", "Dictionary");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Label)
+                .HasMaxLength(100)
+                .HasColumnName("label");
+        });
+
         modelBuilder.Entity<Product>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__Products__3214EC078DD09984");
@@ -206,6 +307,20 @@ public partial class ErpContext : DbContext
             entity.Property(e => e.PasswordResetToken).HasMaxLength(200);
             entity.Property(e => e.RemovedAt).HasColumnType("datetime");
             entity.Property(e => e.Role).HasDefaultValue(1);
+        });
+
+        modelBuilder.Entity<UserRole>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserRole__3213E83F83083160");
+
+            entity.ToTable("UserRole", "Dictionary");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Label)
+                .HasMaxLength(100)
+                .HasColumnName("label");
         });
 
         OnModelCreatingPartial(modelBuilder);

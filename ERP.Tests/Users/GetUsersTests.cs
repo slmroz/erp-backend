@@ -19,7 +19,7 @@ public class GetUsersTests
             FirstName = "John",
             LastName = "Doe",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.User
+            Role = (int)Model.Enum.UserRole.User
         };
         var user2 = new Model.Model.User
         {
@@ -27,7 +27,7 @@ public class GetUsersTests
             FirstName = "Jane",
             LastName = "Smith",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.Admin
+            Role = (int)Model.Enum.UserRole.Admin
         };
 
         context.Users.AddRange(user1, user2);
@@ -69,7 +69,7 @@ public class GetUsersTests
             FirstName = "Test",
             LastName = "User",
             Password = "hashedpass",
-            Role = (int)Model.Enum.Role.User,
+            Role = (int)Model.Enum.UserRole.User,
             CreatedAt = DateTime.UtcNow
         };
         context.Users.Add(user);
@@ -85,7 +85,7 @@ public class GetUsersTests
         dto.Email.Should().Be("test@test.com");
         dto.FirstName.Should().Be("Test");
         dto.LastName.Should().Be("User");
-        dto.Role.Should().Be((int)Model.Enum.Role.User);
+        dto.Role.Should().Be((int)Model.Enum.UserRole.User);
     }
 
     [Fact]
@@ -93,17 +93,17 @@ public class GetUsersTests
     {
         using var context = TestDbContextFactory.Create();
         context.Users.AddRange(
-            UserTestFactory.CreateUser("jan@admin.com", "Jan", "Kowalski", (int)Role.Admin),
-            UserTestFactory.CreateUser("anna@manager.com", "Anna", "Nowak", (int)Role.Manager),
-            UserTestFactory.CreateUser("piotr@user.com", "Piotr", "Wiśniewski", (int)Role.Admin)
+            UserTestFactory.CreateUser("jan@admin.com", "Jan", "Kowalski", (int)Model.Enum.UserRole.Admin),
+            UserTestFactory.CreateUser("anna@manager.com", "Anna", "Nowak", (int)Model.Enum.UserRole.Manager),
+            UserTestFactory.CreateUser("piotr@user.com", "Piotr", "Wiśniewski", (int)Model.Enum.UserRole.Admin)
         );
         await context.SaveChangesAsync();
 
         var handler = new GetUsersHandler(context);
-        var result = await handler.HandleAsync(new GetUsersQuery(Role: (int)Role.Admin));
+        var result = await handler.HandleAsync(new GetUsersQuery(Role: (int)Model.Enum.UserRole.Admin));
 
         result.Items.Should().HaveCount(2);
-        result.Items.All(u => u.Role == (int)Role.Admin).Should().BeTrue();
+        result.Items.All(u => u.Role == (int)Model.Enum.UserRole.Admin).Should().BeTrue();
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class GetUsersTests
     {
         using var context = TestDbContextFactory.Create();
         context.Users.Add(
-            UserTestFactory.CreateUser("JAN@TEST.COM", "JAN", "KOWALSKI", (int)Role.Admin));
+            UserTestFactory.CreateUser("JAN@TEST.COM", "JAN", "KOWALSKI", (int)Model.Enum.UserRole.Admin));
         await context.SaveChangesAsync();
 
         var handler = new GetUsersHandler(context);

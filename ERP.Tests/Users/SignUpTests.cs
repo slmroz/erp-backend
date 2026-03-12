@@ -26,7 +26,7 @@ public class SignUpTests
             Password: "mypassword123",
             FirstName: "John",
             LastName: "Doe", 
-            Role: (int)Role.User);
+            Role: (int)UserRole.User);
 
         // Act
         await handler.HandleAsync(command);
@@ -41,7 +41,7 @@ public class SignUpTests
         createdUser.FirstName.Should().Be("John");
         createdUser.LastName.Should().Be("Doe");
         createdUser.CreatedAt.Should().NotBe(default(DateTime));
-        createdUser.Role.Should().Be((int)Model.Enum.Role.User);
+        createdUser.Role.Should().Be((int)Model.Enum.UserRole.User);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class SignUpTests
         await context.SaveChangesAsync();
 
         var handler = new SignUpHandler(context, passwordManager.Object, clock);
-        var command = new SignUpCommand("existing@test.com", "password123", "John", "Doe", (int)Role.User);
+        var command = new SignUpCommand("existing@test.com", "password123", "John", "Doe", (int)UserRole.User);
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<Exception>(
@@ -86,7 +86,7 @@ public class SignUpTests
 
         // Assert
         var createdUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "user@test.com");
-        createdUser!.Role.Should().Be((int)Model.Enum.Role.User); // Default role
+        createdUser!.Role.Should().Be((int)Model.Enum.UserRole.User); // Default role
     }
 
     [Fact]
@@ -105,14 +105,14 @@ public class SignUpTests
             "adminpass",
             "Admin",
             "User",
-            Role: (int)Model.Enum.Role.Admin);
+            Role: (int)Model.Enum.UserRole.Admin);
 
         // Act
         await handler.HandleAsync(command);
 
         // Assert
         var createdUser = await context.Users.FirstOrDefaultAsync(u => u.Email == "admin@test.com");
-        createdUser!.Role.Should().Be((int)Model.Enum.Role.Admin);
+        createdUser!.Role.Should().Be((int)Model.Enum.UserRole.Admin);
     }
 
     [Fact]
@@ -128,7 +128,7 @@ public class SignUpTests
         passwordManager.Setup(pm => pm.Secure(plainPassword)).Returns(expectedHash);
 
         var handler = new SignUpHandler(context, passwordManager.Object, clock);
-        var command = new SignUpCommand(plainPassword, plainPassword, "Test", "User", (int)Role.User);
+        var command = new SignUpCommand(plainPassword, plainPassword, "Test", "User", (int)UserRole.User);
 
         // Act
         await handler.HandleAsync(command);
@@ -149,7 +149,7 @@ public class SignUpTests
         passwordManager.Setup(pm => pm.Secure("pass")).Returns("HASHED");
 
         var handler = new SignUpHandler(context, passwordManager.Object, clock);
-        var command = new SignUpCommand("test@test.com", "pass", "Test", "User", (int)Role.User);
+        var command = new SignUpCommand("test@test.com", "pass", "Test", "User", (int)UserRole.User);
 
         // Act
         await handler.HandleAsync(command);

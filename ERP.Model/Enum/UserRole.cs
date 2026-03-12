@@ -1,5 +1,6 @@
 ﻿namespace ERP.Model.Enum;
-public enum Role
+public enum UserRole
+
 {
     User = 1,
     Admin = 2,

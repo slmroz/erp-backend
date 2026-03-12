@@ -17,7 +17,7 @@ public class GetUserTests
             FirstName = "John",
             LastName = "Doe",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.User
+            Role = (int)Model.Enum.UserRole.User
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -33,7 +33,7 @@ public class GetUserTests
         result.Email.Should().Be("john.doe@test.com");
         result.FirstName.Should().Be("John");
         result.LastName.Should().Be("Doe");
-        result.Role.Should().Be((int)Model.Enum.Role.User);
+        result.Role.Should().Be((int)Model.Enum.UserRole.User);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class GetUserTests
             FirstName = "Admin",
             LastName = "User",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.Admin
+            Role = (int)Model.Enum.UserRole.Admin
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -76,7 +76,7 @@ public class GetUserTests
         result.Should().NotBeNull();
         result!.Id.Should().Be(42);
         result.Email.Should().Be("admin@company.com");
-        result.Role.Should().Be((int)Model.Enum.Role.Admin);
+        result.Role.Should().Be((int)Model.Enum.UserRole.Admin);
         result.FirstName.Should().Be("Admin");
         result.LastName.Should().Be("User");
     }

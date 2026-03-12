@@ -22,7 +22,7 @@ public class SignInTests
             Id = 1,
             Email = "john@test.com",
             Password = "hashedpass123",
-            Role = (int)Model.Enum.Role.User
+            Role = (int)Model.Enum.UserRole.User
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -107,7 +107,7 @@ public class SignInTests
             Id = 42,
             Email = "admin@test.com",
             Password = "P@$$",
-            Role = (int)Model.Enum.Role.Admin
+            Role = (int)Model.Enum.UserRole.Admin
         };
         context.Users.Add(user);
         await context.SaveChangesAsync();

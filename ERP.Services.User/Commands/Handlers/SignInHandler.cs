@@ -33,7 +33,7 @@ internal sealed class SignInHandler : ICommandHandler<SignInCommand>
             throw new Exception($"Invalud credentials");
         }
 
-        var role = (Model.Enum.Role)user.Role;
+        var role = (Model.Enum.UserRole)user.Role;
         var jwt = _authenticator.CreateToken(user.Id, role.ToString(), user.Email);
         _tokenStorage.Set(jwt);
     }

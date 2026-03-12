@@ -30,4 +30,6 @@ public partial class Customer
     public DateTime? RemovedAt { get; set; }
 
     public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+
+    public virtual ICollection<Lead> Leads { get; set; } = new List<Lead>();
 }

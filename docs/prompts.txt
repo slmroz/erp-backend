@@ -1,0 +1,23 @@
+Zbuduj proszę CQRS dla:
+Uwzględnij opcję sortowania i filtrowania w komendzie pobierania listy.
+Przy komendzie add - upewnij się, że handler nie zwraca int, tylko zapisuje go jako właściwość komendy. 
+Aby była możliwość nadpisania Id w komendzie - uczyń ją klasą, nie rekordem.
+Nazwij EF context: ErpContext
+
+zamiast 
+return new PagedResult<Dto>(items, total, query.Page, query.PageSize)
+zwróć wynik wyszukiwania w następujący sposób
+
+        return new PagedResult<Dto>
+        {
+            TotalCount = total,
+            Items = items
+        };
+Udostępnij proszę pełny kod, bez skracania analogicznych fragmentów.		
+
+
+Zaktualizowałem openapi.json, dodano CRUD dla PriceList i PriceListItem. Dodaj proszę obsługę tego CRUD do aplikacji, cennik w menu jako podopcja w "Catalog".
+W opcji dodania nowego cennika uwzględnij proszę wybór waluty z listy rozwijalnej oraz opcję wypełnienia nowopowstałego cennika pozycjami z listy produktów
+(parametr fillItems). Zarządzanie pozycjami niech ma miejsce tylko z poziomu wybranego cennika.
+
+W widoku grida dodaj proszę przycisk "Refresh", po kliknięciu pobierający ponownie listę, tym razem z parametrem "refresh" ustawionym na True.
