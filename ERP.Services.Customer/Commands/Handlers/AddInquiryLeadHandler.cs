@@ -53,7 +53,7 @@ internal sealed class AddInquiryLeadHandler : ICommandHandler<AddInquiryLeadComm
                 LastName = command.ContactLastName,
                 Email = command.ContactEmail,
                 PhoneNo = command.ContactPhone,
-                CreatedAt = _clock.Current()
+                //CreatedAt = _clock.Current()
             };
             await _dbContext.Contacts.AddAsync(contact);
             await _dbContext.SaveChangesAsync();
@@ -70,7 +70,7 @@ internal sealed class AddInquiryLeadHandler : ICommandHandler<AddInquiryLeadComm
                 PriorityId = (int)command.Priority,
                 ExpectedResponseDate = DateOnly.FromDateTime(_clock.Current().AddDays(1)),
                 CreatedAt = _clock.Current(),
-                CreatedBy = 0
+                //CreatedBy = 0
             };
             await _dbContext.Leads.AddAsync(lead);
             await _dbContext.SaveChangesAsync();
